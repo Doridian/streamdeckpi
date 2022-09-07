@@ -1,5 +1,5 @@
-github.com/Doridian/streamdeck v0.1.0 h1:RDxaa19PuJ4F8j0GfvvRv2IMRAWLC0Co5LP8wJTjyj0=
-github.com/Doridian/streamdeck v0.1.0/go.mod h1:/D49yWZ6kE+/FHvgIBo9nZXeLMhQ/ITnsHVlkfRZOww=
+github.com/Doridian/streamdeck v0.1.2 h1:PZhStsmgwriZ+bqL/b4yF1VR4Prkv94NqN+MOJ4tKy0=
+github.com/Doridian/streamdeck v0.1.2/go.mod h1:/D49yWZ6kE+/FHvgIBo9nZXeLMhQ/ITnsHVlkfRZOww=
 github.com/KarpelesLab/hid v0.1.0 h1:TQodVh83+piiiJbuoy8d1w2DFjkI3KS/8Efj0V05ur0=
 github.com/KarpelesLab/hid v0.1.0/go.mod h1:AQmidlnvRgFwFyHsiQdtCnqBYJzruab7YiHOSIzRgMI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=

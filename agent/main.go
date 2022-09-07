@@ -49,7 +49,11 @@ func main() {
 	}
 
 	for {
-		b := <-buttonChan
+		b, ok := <-buttonChan
+		if !ok {
+			break
+		}
+
 		log.Printf("B: %v, P: %v", b.Index, b.Pressed)
 		if b.Pressed {
 			d.SetImage(b.Index, img)
