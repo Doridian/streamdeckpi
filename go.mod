@@ -2,10 +2,10 @@ module github.com/Doridian/streamdeckpi
 
 go 1.19
 
-require github.com/muesli/streamdeck v0.3.0
+require github.com/Doridian/streamdeck v0.0.0-20220907015624-9bf18f1d511d
 
 require (
-	github.com/karalabe/hid v1.0.1-0.20190806082151-9c14560f9ee8 // indirect
+	github.com/jkassis/hid v0.0.0-20220630003547-398145ff2de0 // indirect
 	golang.org/x/image v0.0.0-20200119044424-58c23975cae1 // indirect
 )
 

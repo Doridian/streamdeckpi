@@ -1,45 +1,36 @@
 package main
 
 import (
-	"fmt"
+	"bytes"
+	"image/png"
+	"log"
 
-	"github.com/muesli/streamdeck"
+	"github.com/Doridian/streamdeck"
+
+	_ "embed"
 )
 
-type programState struct {
-	d streamdeck.Device
-}
-
-func (s *programState) closeStreamDeck() error {
-	return s.d.Close()
-}
-
-func (s *programState) initStreamDeck() error {
-	devs, err := streamdeck.Devices()
-	if err != nil {
-		return fmt.Errorf("no Stream Deck devices found: %s", err)
-	}
-	if len(devs) == 0 {
-		return fmt.Errorf("no Stream Deck devices found")
-	}
-	s.d = devs[0]
-
-	if err := s.d.Open(); err != nil {
-		return fmt.Errorf("can't open device: %s", err)
-	}
-
-	/*
-		ver, err := d.FirmwareVersion()
-		if err != nil {
-			return fmt.Errorf("can't retrieve device info: %s", err)
-		}
-		fmt.Printf("Found device with serial %s (firmware %s)\n",
-			d.Serial, ver)
-	*/
-
-	return nil
-}
+//go:embed test.png
+var imageData []byte
 
 func main() {
+	img, err := png.Decode(bytes.NewReader(imageData))
+	if err != nil {
+		log.Panicf("No embdedded image: %v", err)
+	}
 
+	devs, err := streamdeck.Devices()
+	if err != nil {
+		log.Panicf("no Stream Deck devices found: %v", err)
+	}
+	if len(devs) == 0 {
+		log.Panicf("no Stream Deck devices found")
+	}
+	d := devs[0]
+	if err := d.Open(); err != nil {
+		log.Panicf("can't open device: %v", err)
+	}
+	defer d.Close()
+
+	d.SetImage(0, img)
 }
