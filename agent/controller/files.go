@@ -25,6 +25,9 @@ func loadMainDir() string {
 
 func (c *controller) resolveFile(file string) (io.ReadCloser, error) {
 	file = path.Clean(file)
+	if file == ".." || file[0] == '/' || (len(file) >= 3 && file[0:3] == "../") {
+		return nil, errors.New("paths outside config dir are not allowed")
+	}
 
 	fh, err := os.Open(path.Join(loadMainDirectory, file))
 	if err == nil {
@@ -33,10 +36,6 @@ func (c *controller) resolveFile(file string) (io.ReadCloser, error) {
 
 	if !os.IsNotExist(err) {
 		return nil, err
-	}
-
-	if path.IsAbs(file) {
-		return nil, errors.New("could not find file in real FS and absolute paths are not allowed for embedFS")
 	}
 
 	return agent.FS.Open(file)
