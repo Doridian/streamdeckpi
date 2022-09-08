@@ -27,7 +27,7 @@ type controller struct {
 	dev *streamdeck.Device
 
 	pageCache     map[string]*page
-	pageCacheLock sync.RWMutex
+	pageCacheLock sync.Mutex
 }
 
 func NewController(dev *streamdeck.Device) (interfaces.Controller, error) {

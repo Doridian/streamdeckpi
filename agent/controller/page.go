@@ -13,6 +13,7 @@ type page struct {
 	path    string
 	timeout time.Duration
 	actions []actions.Action
+	refCnt  int
 }
 
 func (c *controller) resolvePage(pageFile string) (*page, error) {
@@ -21,10 +22,12 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 		return nil, err
 	}
 
-	c.pageCacheLock.RLock()
+	c.pageCacheLock.Lock()
+	defer c.pageCacheLock.Unlock()
+
 	cachedPage, ok := c.pageCache[pageFile]
-	c.pageCacheLock.RUnlock()
 	if ok {
+		cachedPage.refCnt++
 		return cachedPage, nil
 	}
 
@@ -51,6 +54,7 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 		path:    pageFile,
 		timeout: out.Timeout,
 		actions: make([]actions.Action, actionLen),
+		refCnt:  0,
 	}
 
 	imageLoader := newImageLoader(c, pageObj)
@@ -63,10 +67,15 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 		pageObj.actions[actionSchema.Button] = actionObj
 	}
 
-	c.pageCacheLock.Lock()
+	pageObj.refCnt++
 	c.pageCache[pageFile] = pageObj
-	c.pageCacheLock.Unlock()
 	return pageObj, nil
+}
+
+func (c *controller) unrefPage(pageObj *page) {
+	c.pageCacheLock.Lock()
+	pageObj.refCnt--
+	c.pageCacheLock.Unlock()
 }
 
 func (c *controller) SwapPage(pageFile string) error {
@@ -78,6 +87,7 @@ func (c *controller) SwapPage(pageFile string) error {
 	c.pageWait.Lock()
 	defer c.pageWait.Unlock()
 
+	c.unrefPage(c.pageTop)
 	c.pageStack[len(c.pageStack)-1] = pageObj
 	c.pageTop = pageObj
 
@@ -108,6 +118,7 @@ func (c *controller) PopPage() error {
 		return errors.New("page stack is empty")
 	}
 
+	c.unrefPage(c.pageTop)
 	c.pageStack = c.pageStack[:newLen]
 	c.pageTop = c.pageStack[newLen-1]
 
