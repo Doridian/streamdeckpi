@@ -12,9 +12,9 @@ type Action interface {
 	// Return a reference to your config object in GetConfigRef
 	// When ApplyConfig is called, read whatever is in it (it will be written to by the config loader)
 	GetConfigRef() interface{}
-	ApplyConfig(imageLoader interfaces.ImageLoader) error
+	ApplyConfig(imageLoader interfaces.ImageLoader, controller interfaces.Controller) error
 
-	Run(pressed bool, controller interfaces.Controller) error
+	Run(pressed bool) error
 
 	// In Render, you can return a nil image to indicate the image hasn't changed since the last call
 	// This will indicate to the renderer to not change the image
@@ -24,7 +24,7 @@ type Action interface {
 	Render(force bool) (*streamdeck.ImageData, error)
 }
 
-func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader interfaces.ImageLoader) (Action, error) {
+func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader interfaces.ImageLoader, controller interfaces.Controller) (Action, error) {
 	var action Action
 	// TODO: Find action struct and create here
 	if action == nil {
@@ -35,7 +35,7 @@ func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader interface
 	if err != nil {
 		return nil, err
 	}
-	err = action.ApplyConfig(imageLoader)
+	err = action.ApplyConfig(imageLoader, controller)
 	if err != nil {
 		return nil, err
 	}

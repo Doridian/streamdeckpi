@@ -60,7 +60,7 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 	imageLoader := newImageLoader(c, pageObj)
 
 	for _, actionSchema := range out.Actions {
-		actionObj, err := actions.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader)
+		actionObj, err := actions.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader, c)
 		if err != nil {
 			return nil, err
 		}

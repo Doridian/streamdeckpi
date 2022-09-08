@@ -10,6 +10,7 @@ type Controller interface {
 	Start() error
 	Stop() error
 	Wait() error
+	Reset() error
 
 	GetBlankImage() *streamdeck.ImageData
 }

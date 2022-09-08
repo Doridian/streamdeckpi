@@ -38,16 +38,13 @@ func NewController(dev *streamdeck.Device) (interfaces.Controller, error) {
 		return nil, err
 	}
 
-	res := &controller{
+	return &controller{
 		pageStack:  make([]*page, 0),
+		pageTop:    nil,
 		dev:        dev,
 		running:    false,
 		blankImage: convImg,
-	}
-
-	err = res.PushPage("./default.yml")
-
-	return res, err
+	}, nil
 }
 
 func (c *controller) GetBlankImage() *streamdeck.ImageData {
@@ -58,7 +55,16 @@ func (c *controller) Start() error {
 	c.runControlWait.Lock()
 	defer c.runControlWait.Unlock()
 
-	err := c.dev.Open()
+	if c.running {
+		return errors.New("already running")
+	}
+
+	err := c.Reset()
+	if err != nil {
+		return err
+	}
+
+	err = c.dev.Open()
 	if err != nil {
 		return err
 	}
@@ -73,6 +79,18 @@ func (c *controller) Start() error {
 	go c.renderLoop()
 
 	return nil
+}
+
+func (c *controller) Reset() error {
+	c.pageWait.Lock()
+	defer c.pageWait.Unlock()
+	c.pageCacheLock.Lock()
+	defer c.pageCacheLock.Unlock()
+
+	c.pageCache = make(map[string]*page)
+	c.pageStack = make([]*page, 0)
+	c.pageTop = nil
+	return c.PushPage("./default.yml")
 }
 
 func (c *controller) Stop() error {
@@ -95,7 +113,7 @@ func (c *controller) stopError(err error) {
 
 func (c *controller) stopSync(err error) error {
 	c.runControlWait.Lock()
-	c.runControlWait.Unlock()
+	defer c.runControlWait.Unlock()
 
 	if c.runError == nil && err != nil {
 		c.runError = err

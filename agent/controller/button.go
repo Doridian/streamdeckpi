@@ -30,7 +30,7 @@ func (c *controller) handleButtonPress(idx int, pressed bool) {
 	if action == nil {
 		return
 	}
-	err := action.Run(pressed, c)
+	err := action.Run(pressed)
 	if err != nil {
 		log.Printf("Error running action: %v", err)
 	}
