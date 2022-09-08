@@ -19,12 +19,19 @@ func (c *controller) buttonLoop() {
 			break
 		}
 
-		c.handleButtonPress(int(b.Index), b.Pressed)
+		go c.handleButtonPress(int(b.Index), b.Pressed)
 	}
 
 	c.stopError(errors.New("unexpectedly reached end of button loop"))
 }
 
 func (c *controller) handleButtonPress(idx int, pressed bool) {
-
+	action := c.pageTop.Actions[idx]
+	if action == nil {
+		return
+	}
+	err := action.Run(pressed, c)
+	if err != nil {
+		log.Printf("Error running action: %v", err)
+	}
 }

@@ -22,7 +22,7 @@ type controller struct {
 	running        bool
 	runWait        sync.WaitGroup
 	runError       error
-	runControlWait sync.Mutex
+	runControlWait sync.RWMutex
 
 	dev *streamdeck.Device
 }
@@ -65,14 +65,15 @@ func (c *controller) Start() error {
 }
 
 func (c *controller) Stop() error {
-	c.runControlWait.Lock()
-	defer c.runControlWait.Unlock()
-
 	return c.stopSync(errStopNone)
 }
 
 func (c *controller) Wait() error {
+	c.runControlWait.RLock()
+	defer c.runControlWait.RUnlock()
+
 	c.runWait.Wait()
+
 	if c.runError == errStopNone {
 		return nil
 	}
@@ -84,15 +85,15 @@ func (c *controller) stopError(err error) {
 }
 
 func (c *controller) stopSync(err error) error {
-	c.runControlWait.Lock()
-	defer c.runControlWait.Unlock()
+	c.runControlWait.RLock()
+	defer c.runControlWait.RUnlock()
 
-	if c.runError == nil {
+	if c.runError == nil && err != nil {
 		c.runError = err
 	}
 
 	c.running = false
-	c.Wait()
+	c.runWait.Wait()
 	return c.dev.Close()
 }
 

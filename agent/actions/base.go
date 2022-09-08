@@ -10,7 +10,7 @@ import (
 type Action interface {
 	SetConfig(config map[string]interface{}) error
 
-	Run(interfaces.Controller) error
+	Run(pressed bool, controller interfaces.Controller) error
 
 	// In Render, you can return a nil image to indicate the image hasn't changed since the last call
 	// This will indicate to the renderer to not change the image
