@@ -25,7 +25,7 @@ func loadMainDir() string {
 
 func (c *controller) resolveFile(file string) (io.ReadCloser, error) {
 	file = path.Clean(file)
-	if file == ".." || file[0] == '/' || (len(file) >= 3 && file[0:3] == "../") {
+	if file == "" || file == ".." || file[0] == '/' || (len(file) >= 3 && file[0:3] == "../") {
 		return nil, errors.New("paths outside config dir are not allowed")
 	}
 
