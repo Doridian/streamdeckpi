@@ -2,7 +2,10 @@ module github.com/Doridian/streamdeckpi
 
 go 1.19
 
-require github.com/Doridian/streamdeck v0.1.2
+require (
+	github.com/Doridian/streamdeck v0.1.3
+	gopkg.in/yaml.v3 v3.0.1
+)
 
 require (
 	github.com/KarpelesLab/hid v0.1.0 // indirect
