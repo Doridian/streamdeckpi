@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/Doridian/streamdeck"
@@ -15,6 +16,7 @@ type Action interface {
 	ApplyConfig(imageLoader interfaces.ImageLoader, controller interfaces.Controller) error
 
 	Run(pressed bool) error
+	Name() string
 
 	// In Render, you can return a nil image to indicate the image hasn't changed since the last call
 	// This will indicate to the renderer to not change the image
@@ -24,11 +26,34 @@ type Action interface {
 	Render(force bool) (*streamdeck.ImageData, error)
 }
 
+var actionsMap = loadActions()
+
+func loadActions() map[string](func() Action) {
+	actions := [](func() Action){
+		func() Action { return &None{} },
+
+		func() Action { return &SwapPage{} },
+		func() Action { return &SwapPage{} },
+		func() Action { return &PushPage{} },
+		func() Action { return &PopPage{} },
+	}
+
+	res := make(map[string](func() Action))
+	for _, a := range actions {
+		res[a().Name()] = a
+	}
+	return res
+}
+
 func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader interfaces.ImageLoader, controller interfaces.Controller) (Action, error) {
-	var action Action
-	// TODO: Find action struct and create here
-	if action == nil {
+	actionCtor := actionsMap[name]
+	if actionCtor == nil {
 		return nil, fmt.Errorf("no action known with name: %s", name)
+	}
+
+	action := actionCtor()
+	if action == nil {
+		return nil, errors.New("action constructor failed")
 	}
 
 	err := config.Unmarshal(action.GetConfigRef())
