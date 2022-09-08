@@ -15,6 +15,7 @@ var errStopNone = errors.New("no error")
 type controller struct {
 	pageStack []*page
 	pageTop   *page
+	pageWait  sync.Mutex
 
 	lastRenderedPage *page
 	blankImage       image.Image

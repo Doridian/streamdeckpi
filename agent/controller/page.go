@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"io"
 	"time"
 
@@ -42,7 +43,7 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 	}
 
 	for _, actionSchema := range out.Actions {
-		actionObj, err := actions.LoadAction(actionSchema.ActionName, actionSchema.Parameters)
+		actionObj, err := actions.LoadAction(actionSchema.ActionName, &actionSchema.Parameters)
 		if err != nil {
 			return nil, err
 		}
@@ -53,13 +54,46 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 }
 
 func (c *controller) SwapPage(pageFile string) error {
+	pageObj, err := c.resolvePage(pageFile)
+	if err != nil {
+		return err
+	}
+
+	c.pageWait.Lock()
+	defer c.pageWait.Unlock()
+
+	c.pageStack[len(c.pageStack)-1] = pageObj
+	c.pageTop = pageObj
+
 	return nil
 }
 
 func (c *controller) PushPage(pageFile string) error {
+	pageObj, err := c.resolvePage(pageFile)
+	if err != nil {
+		return err
+	}
+
+	c.pageWait.Lock()
+	defer c.pageWait.Unlock()
+
+	c.pageStack = append(c.pageStack, pageObj)
+	c.pageTop = pageObj
+
 	return nil
 }
 
 func (c *controller) PopPage() error {
+	c.pageWait.Lock()
+	defer c.pageWait.Unlock()
+
+	newLen := len(c.pageStack) - 1
+	if newLen < 1 {
+		return errors.New("page stack is empty")
+	}
+
+	c.pageStack = c.pageStack[:newLen]
+	c.pageTop = c.pageStack[newLen-1]
+
 	return nil
 }

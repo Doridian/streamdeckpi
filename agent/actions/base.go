@@ -1,14 +1,18 @@
 package actions
 
 import (
-	"errors"
+	"fmt"
 	"image"
 
 	"github.com/Doridian/streamdeckpi/agent/interfaces"
+	"github.com/Doridian/streamdeckpi/agent/utils"
 )
 
 type Action interface {
-	SetConfig(config map[string]interface{}) error
+	// Return a reference to your config object in GetConfigRef
+	// When ApplyConfig is called, read whatever is in it (it will be written to by the config loader)
+	GetConfigRef() interface{}
+	ApplyConfig(imageLoader interfaces.ImageLoader) error
 
 	Run(pressed bool, controller interfaces.Controller) error
 
@@ -20,6 +24,28 @@ type Action interface {
 	Render(force bool) (image.Image, error)
 }
 
-func LoadAction(name string, config map[string]interface{}) (Action, error) {
-	return nil, errors.New("implement me")
+func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader interfaces.ImageLoader) (Action, error) {
+	var action Action
+	// TODO: Load object here
+	if action == nil {
+		return nil, fmt.Errorf("no action known with name: %s", name)
+	}
+
+	err := config.Unmarshal(action.GetConfigRef())
+	if err != nil {
+		return nil, err
+	}
+	err = action.ApplyConfig(imageLoader)
+	if err != nil {
+		return nil, err
+	}
+	return action, nil
+}
+
+type ActionWithIcon struct {
+	Icon image.Image
+}
+
+type None struct {
+	ActionWithIcon
 }
