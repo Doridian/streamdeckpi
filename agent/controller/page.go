@@ -16,6 +16,18 @@ type page struct {
 }
 
 func (c *controller) resolvePage(pageFile string) (*page, error) {
+	pageFile, err := c.cleanPath(pageFile)
+	if err != nil {
+		return nil, err
+	}
+
+	c.pageCacheLock.RLock()
+	cachedPage, ok := c.pageCache[pageFile]
+	c.pageCacheLock.RUnlock()
+	if ok {
+		return cachedPage, nil
+	}
+
 	reader, err := c.resolveFile(pageFile)
 	if err != nil {
 		return nil, err
@@ -51,6 +63,9 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 		pageObj.actions[actionSchema.Button] = actionObj
 	}
 
+	c.pageCacheLock.Lock()
+	c.pageCache[pageFile] = pageObj
+	c.pageCacheLock.Unlock()
 	return pageObj, nil
 }
 

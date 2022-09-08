@@ -23,12 +23,15 @@ func loadMainDir() string {
 	return configDir
 }
 
-func (c *controller) resolveFile(file string) (io.ReadCloser, error) {
+func (c *controller) cleanPath(file string) (string, error) {
 	file = path.Clean(file)
 	if file == "" || file == ".." || file[0] == '/' || (len(file) >= 3 && file[0:3] == "../") {
-		return nil, errors.New("paths outside config dir are not allowed")
+		return file, errors.New("paths outside config dir are not allowed")
 	}
+	return file, nil
+}
 
+func (c *controller) resolveFile(file string) (io.ReadCloser, error) {
 	fh, err := os.Open(path.Join(loadMainDirectory, file))
 	if err == nil {
 		return fh, nil
@@ -38,5 +41,6 @@ func (c *controller) resolveFile(file string) (io.ReadCloser, error) {
 		return nil, err
 	}
 
-	return agent.FS.Open(file)
+	reader, err := agent.FS.Open(file)
+	return reader, err
 }

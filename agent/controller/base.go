@@ -25,6 +25,9 @@ type controller struct {
 	runControlWait sync.Mutex
 
 	dev *streamdeck.Device
+
+	pageCache     map[string]*page
+	pageCacheLock sync.RWMutex
 }
 
 func NewController(dev *streamdeck.Device) (interfaces.Controller, error) {
