@@ -10,18 +10,17 @@ import (
 )
 
 type page struct {
-	path string
-
-	Timeout time.Duration `yaml:"timeout"`
-
-	Actions []actions.Action `yaml:"actions"`
+	path    string
+	timeout time.Duration
+	actions []actions.Action
 }
 
 func (c *controller) resolvePage(pageFile string) (*page, error) {
-	reader, name, err := c.resolveFile(pageFile)
+	reader, err := c.resolveFile(pageFile)
 	if err != nil {
 		return nil, err
 	}
+	defer reader.Close()
 
 	data, err := io.ReadAll(reader)
 	if err != nil {
@@ -37,17 +36,19 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 	actionLen := c.dev.Columns * c.dev.Rows
 
 	pageObj := &page{
-		path:    name,
-		Timeout: out.Timeout,
-		Actions: make([]actions.Action, actionLen),
+		path:    pageFile,
+		timeout: out.Timeout,
+		actions: make([]actions.Action, actionLen),
 	}
 
+	imageLoader := newImageLoader(c, pageObj)
+
 	for _, actionSchema := range out.Actions {
-		actionObj, err := actions.LoadAction(actionSchema.ActionName, &actionSchema.Parameters)
+		actionObj, err := actions.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader)
 		if err != nil {
 			return nil, err
 		}
-		pageObj.Actions[actionSchema.Button] = actionObj
+		pageObj.actions[actionSchema.Button] = actionObj
 	}
 
 	return pageObj, nil

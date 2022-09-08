@@ -25,7 +25,7 @@ func (c *controller) render() (hadErrors bool) {
 	var img image.Image
 	var err error
 
-	for i, action := range c.pageTop.Actions {
+	for i, action := range c.pageTop.actions {
 		img, err = c.renderAction(action, pageSwapped)
 		if err != nil {
 			log.Printf("Error rendering action: %v", err)

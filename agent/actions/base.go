@@ -41,11 +41,3 @@ func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader interface
 	}
 	return action, nil
 }
-
-type ActionWithIcon struct {
-	Icon image.Image
-}
-
-type None struct {
-	ActionWithIcon
-}

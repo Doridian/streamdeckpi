@@ -3,7 +3,6 @@ package controller
 import (
 	"errors"
 	"image"
-	"io"
 	"sync"
 
 	"github.com/Doridian/streamdeck"
@@ -94,8 +93,4 @@ func (c *controller) stopSync(err error) error {
 	c.running = false
 	c.runWait.Wait()
 	return c.dev.Close()
-}
-
-func (c *controller) resolveFile(file string) (io.ReadCloser, string, error) {
-	return nil, "", errors.New("could not find file")
 }

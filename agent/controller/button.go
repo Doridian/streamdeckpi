@@ -26,7 +26,7 @@ func (c *controller) buttonLoop() {
 }
 
 func (c *controller) handleButtonPress(idx int, pressed bool) {
-	action := c.pageTop.Actions[idx]
+	action := c.pageTop.actions[idx]
 	if action == nil {
 		return
 	}
