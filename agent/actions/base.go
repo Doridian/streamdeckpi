@@ -26,7 +26,7 @@ type Action interface {
 
 func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader interfaces.ImageLoader) (Action, error) {
 	var action Action
-	// TODO: Load object here
+	// TODO: Find action struct and create here
 	if action == nil {
 		return nil, fmt.Errorf("no action known with name: %s", name)
 	}
