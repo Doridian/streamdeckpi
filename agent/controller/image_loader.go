@@ -4,6 +4,7 @@ import (
 	"image"
 	"path"
 
+	"github.com/Doridian/streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/interfaces"
 )
 
@@ -19,7 +20,7 @@ func newImageLoader(controller *controller, page *page) interfaces.ImageLoader {
 	}
 }
 
-func (l *imageLoader) Load(path string) (image.Image, error) {
+func (l *imageLoader) Load(path string) (*streamdeck.ImageData, error) {
 	reader, err := l.controller.resolveFile(path)
 	if err != nil {
 		return nil, err
@@ -27,5 +28,9 @@ func (l *imageLoader) Load(path string) (image.Image, error) {
 	defer reader.Close()
 
 	img, _, err := image.Decode(reader)
-	return img, err
+	if err != nil {
+		return nil, err
+	}
+
+	return l.controller.dev.ConvertImage(img)
 }

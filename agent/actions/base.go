@@ -2,8 +2,8 @@ package actions
 
 import (
 	"fmt"
-	"image"
 
+	"github.com/Doridian/streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/interfaces"
 	"github.com/Doridian/streamdeckpi/agent/utils"
 )
@@ -21,7 +21,7 @@ type Action interface {
 	//
 	// If force is true, you must always return an image if the action has one available
 	// Otherwsie, a blank image will be set
-	Render(force bool) (image.Image, error)
+	Render(force bool) (*streamdeck.ImageData, error)
 }
 
 func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader interfaces.ImageLoader) (Action, error) {

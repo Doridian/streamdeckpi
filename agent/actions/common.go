@@ -1,8 +1,7 @@
 package actions
 
 import (
-	"image"
-
+	"github.com/Doridian/streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/interfaces"
 )
 
@@ -16,7 +15,7 @@ func (a *actionWithIcon) ApplyConfig(imageLoader interfaces.ImageLoader) error {
 	return nil
 }
 
-func (a *actionWithIcon) Render(force bool) (image.Image, error) {
+func (a *actionWithIcon) Render(force bool) (*streamdeck.ImageData, error) {
 	if force {
 		return a.imageLoader.Load(a.Icon)
 	}

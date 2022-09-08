@@ -1,7 +1,7 @@
 package interfaces
 
-import "image"
+import "github.com/Doridian/streamdeck"
 
 type ImageLoader interface {
-	Load(path string) (image.Image, error)
+	Load(path string) (*streamdeck.ImageData, error)
 }

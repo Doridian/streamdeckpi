@@ -2,14 +2,14 @@ package controller
 
 import (
 	"errors"
-	"image"
 	"log"
 	"time"
 
+	"github.com/Doridian/streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/actions"
 )
 
-func (c *controller) renderAction(action actions.Action, force bool) (image.Image, error) {
+func (c *controller) renderAction(action actions.Action, force bool) (*streamdeck.ImageData, error) {
 	if action == nil {
 		return nil, nil
 	}
@@ -22,7 +22,7 @@ func (c *controller) render() (hadErrors bool) {
 	pageSwapped := currentPage != c.lastRenderedPage
 	c.lastRenderedPage = currentPage
 
-	var img image.Image
+	var img *streamdeck.ImageData
 	var err error
 
 	for i, action := range c.pageTop.actions {
@@ -41,7 +41,7 @@ func (c *controller) render() (hadErrors bool) {
 			continue
 		}
 
-		err = c.dev.SetImage(uint8(i), img)
+		err = c.dev.SetConvertedImage(uint8(i), img)
 		if err != nil {
 			log.Printf("Error setting image: %v", err)
 			hadErrors = true

@@ -17,7 +17,7 @@ type controller struct {
 	pageWait  sync.Mutex
 
 	lastRenderedPage *page
-	blankImage       image.Image
+	blankImage       *streamdeck.ImageData
 
 	running        bool
 	runWait        sync.WaitGroup
@@ -28,19 +28,30 @@ type controller struct {
 }
 
 func NewController(dev *streamdeck.Device) (interfaces.Controller, error) {
+	img := image.NewRGBA(image.Rect(0, 0, int(dev.Pixels), int(dev.Pixels)))
+
+	convImg, err := dev.ConvertImage(img)
+	if err != nil {
+		return nil, err
+	}
+
 	res := &controller{
 		pageStack:  make([]*page, 0),
 		dev:        dev,
 		running:    false,
-		blankImage: image.NewRGBA(image.Rect(0, 0, int(dev.Pixels), int(dev.Pixels))),
+		blankImage: convImg,
 	}
 
-	err := res.PushPage("default.yml")
+	err = res.PushPage("default.yml")
 	if err != nil {
 		err = res.PushPage("/:embed/default.yml")
 	}
 
 	return res, err
+}
+
+func (c *controller) GetBlankImage() *streamdeck.ImageData {
+	return c.blankImage
 }
 
 func (c *controller) Start() error {

@@ -1,4 +1,4 @@
 /extrafiles/github.com/gokrazy/wifi/etc/wifi.json
 /builddir
 .DS_Store
-
+/agent/agent
