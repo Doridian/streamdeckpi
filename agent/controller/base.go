@@ -42,10 +42,7 @@ func NewController(dev *streamdeck.Device) (interfaces.Controller, error) {
 		blankImage: convImg,
 	}
 
-	err = res.PushPage("default.yml")
-	if err != nil {
-		err = res.PushPage("/:embed/default.yml")
-	}
+	err = res.PushPage("./default.yml")
 
 	return res, err
 }

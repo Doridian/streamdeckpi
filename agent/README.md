@@ -6,9 +6,13 @@ The configuration is split up into **page**s.
 
 Each **page** has a single **action** assigned to each button.
 
-The special path `/:embed` refers to files embedded inside the binary (the subfolder `embed` in the agent folder when compiling).
+On startup, the page `default.yml` will be loaded.
 
-On startup, the page `./default.yml` (or `/:embed/default.yml` if it cannot be found) will be loaded.
+Any file loaded will first try being loaded relative to the config directory, and then from the embedded FS.
+
+You can adjust the config directory by setting `STREAMDECKPI_CONFIG_DIR` environment variable.
+
+If this variable is unset or blank, it will default to `./config`.
 
 **Page**s are stored in a stack to allow for operations like "go back".
 
@@ -44,7 +48,7 @@ name: swap_page
 button: 0
 parameters:
     icon: some_icon.png
-    target: some_page.yml # Can be an absolute or relative path
+    target: some_page.yml
 ```
 
 #### push_page
@@ -56,7 +60,7 @@ name: push_page
 button: 0
 parameters:
     icon: some_icon.png
-    target: some_page.yml # Can be an absolute or relative path
+    target: some_page.yml
 ```
 
 #### pop_page
