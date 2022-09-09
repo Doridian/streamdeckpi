@@ -1,4 +1,4 @@
-package controller
+package impl
 
 import (
 	"errors"
@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Doridian/streamdeckpi/agent/actions"
+	actions_loader "github.com/Doridian/streamdeckpi/agent/actions/loader"
 	"gopkg.in/yaml.v3"
 )
 
@@ -16,7 +17,7 @@ type page struct {
 	refCnt  int
 }
 
-func (c *controller) resolvePage(pageFile string) (*page, error) {
+func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
 	pageFile, err := c.cleanPath(pageFile)
 	if err != nil {
 		return nil, err
@@ -60,7 +61,7 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 	imageLoader := newImageLoader(c, pageObj)
 
 	for _, actionSchema := range out.Actions {
-		actionObj, err := actions.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader, c)
+		actionObj, err := actions_loader.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader, c)
 		if err != nil {
 			return nil, err
 		}
@@ -72,13 +73,13 @@ func (c *controller) resolvePage(pageFile string) (*page, error) {
 	return pageObj, nil
 }
 
-func (c *controller) unrefPage(pageObj *page) {
+func (c *controllerImpl) unrefPage(pageObj *page) {
 	c.pageCacheLock.Lock()
 	pageObj.refCnt--
 	c.pageCacheLock.Unlock()
 }
 
-func (c *controller) SwapPage(pageFile string) error {
+func (c *controllerImpl) SwapPage(pageFile string) error {
 	pageObj, err := c.resolvePage(pageFile)
 	if err != nil {
 		return err
@@ -94,7 +95,7 @@ func (c *controller) SwapPage(pageFile string) error {
 	return nil
 }
 
-func (c *controller) PushPage(pageFile string) error {
+func (c *controllerImpl) PushPage(pageFile string) error {
 	pageObj, err := c.resolvePage(pageFile)
 	if err != nil {
 		return err
@@ -109,7 +110,7 @@ func (c *controller) PushPage(pageFile string) error {
 	return nil
 }
 
-func (c *controller) PopPage() error {
+func (c *controllerImpl) PopPage() error {
 	c.pageWait.Lock()
 	defer c.pageWait.Unlock()
 

@@ -1,11 +1,11 @@
-package controller
+package impl
 
 import (
 	"errors"
 	"log"
 )
 
-func (c *controller) buttonLoop() {
+func (c *controllerImpl) buttonLoop() {
 	defer c.runWait.Done()
 
 	buttonChan, err := c.dev.ReadKeys()
@@ -25,7 +25,7 @@ func (c *controller) buttonLoop() {
 	c.stopError(errors.New("unexpectedly reached end of button loop"))
 }
 
-func (c *controller) handleButtonPress(idx int, pressed bool) {
+func (c *controllerImpl) handleButtonPress(idx int, pressed bool) {
 	action := c.pageTop.actions[idx]
 	if action == nil {
 		return

@@ -1,7 +1,9 @@
-package actions
+package page
+
+import "github.com/Doridian/streamdeckpi/agent/actions"
 
 type SwapPage struct {
-	ActionWithIcon
+	actions.ActionWithIcon
 	Target string `yaml:"target"`
 }
 
@@ -17,7 +19,7 @@ func (a *SwapPage) Name() string {
 }
 
 type PopPage struct {
-	ActionWithIcon
+	actions.ActionWithIcon
 }
 
 func (a *PopPage) Run(pressed bool) error {
@@ -32,7 +34,7 @@ func (a *PopPage) Name() string {
 }
 
 type PushPage struct {
-	ActionWithIcon
+	actions.ActionWithIcon
 	Target string `yaml:"target"`
 }
 

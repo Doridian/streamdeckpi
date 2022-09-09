@@ -2,15 +2,15 @@ package actions
 
 import (
 	"github.com/Doridian/streamdeck"
-	"github.com/Doridian/streamdeckpi/agent/interfaces"
+	"github.com/Doridian/streamdeckpi/agent/controller"
 )
 
 type ActionBase struct {
-	ImageLoader interfaces.ImageLoader
-	Controller  interfaces.Controller
+	ImageLoader controller.ImageLoader
+	Controller  controller.Controller
 }
 
-func (a *ActionBase) ApplyConfig(imageLoader interfaces.ImageLoader, controller interfaces.Controller) error {
+func (a *ActionBase) ApplyConfig(imageLoader controller.ImageLoader, controller controller.Controller) error {
 	a.ImageLoader = imageLoader
 	a.Controller = controller
 	return nil

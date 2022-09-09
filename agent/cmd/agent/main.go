@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/Doridian/streamdeck"
-	"github.com/Doridian/streamdeckpi/agent/controller"
+	controller_impl "github.com/Doridian/streamdeckpi/agent/controller/impl"
 
 	_ "embed"
 )
@@ -18,7 +18,7 @@ func main() {
 		log.Panicf("no Stream Deck devices found")
 	}
 
-	controller, err := controller.NewController(&devs[0])
+	controller, err := controller_impl.NewController(&devs[0])
 	if err != nil {
 		log.Panicf("Error initializing: %v", err)
 	}

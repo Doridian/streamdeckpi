@@ -1,4 +1,4 @@
-package controller
+package impl
 
 import (
 	"errors"
@@ -23,7 +23,7 @@ func loadMainDir() string {
 	return configDir
 }
 
-func (c *controller) cleanPath(file string) (string, error) {
+func (c *controllerImpl) cleanPath(file string) (string, error) {
 	file = path.Clean(file)
 	if file == "" || file == ".." || file[0] == '/' || (len(file) >= 3 && file[0:3] == "../") {
 		return file, errors.New("paths outside config dir are not allowed")
@@ -31,7 +31,7 @@ func (c *controller) cleanPath(file string) (string, error) {
 	return file, nil
 }
 
-func (c *controller) resolveFile(file string) (io.ReadCloser, error) {
+func (c *controllerImpl) resolveFile(file string) (io.ReadCloser, error) {
 	fh, err := os.Open(path.Join(loadMainDirectory, file))
 	if err == nil {
 		return fh, nil

@@ -1,4 +1,4 @@
-package controller
+package impl
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 	"github.com/Doridian/streamdeckpi/agent/actions"
 )
 
-func (c *controller) renderAction(action actions.Action, force bool) (*streamdeck.ImageData, error) {
+func (c *controllerImpl) renderAction(action actions.Action, force bool) (*streamdeck.ImageData, error) {
 	if action == nil {
 		return nil, nil
 	}
@@ -17,7 +17,7 @@ func (c *controller) renderAction(action actions.Action, force bool) (*streamdec
 	return action.Render(force)
 }
 
-func (c *controller) render() (hadErrors bool) {
+func (c *controllerImpl) render() (hadErrors bool) {
 	currentPage := c.pageTop
 	pageSwapped := currentPage != c.lastRenderedPage
 	c.lastRenderedPage = currentPage
@@ -51,7 +51,7 @@ func (c *controller) render() (hadErrors bool) {
 	return
 }
 
-func (c *controller) renderLoop() {
+func (c *controllerImpl) renderLoop() {
 	defer c.runWait.Done()
 
 	frameWait := time.Duration(16) * time.Millisecond
