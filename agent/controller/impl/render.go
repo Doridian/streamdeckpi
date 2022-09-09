@@ -6,15 +6,15 @@ import (
 	"time"
 
 	"github.com/Doridian/streamdeck"
-	"github.com/Doridian/streamdeckpi/agent/actions"
+	"github.com/Doridian/streamdeckpi/agent/action"
 )
 
-func (c *controllerImpl) renderAction(action actions.Action, force bool) (*streamdeck.ImageData, error) {
-	if action == nil {
+func (c *controllerImpl) renderAction(actionObj action.Action, force bool) (*streamdeck.ImageData, error) {
+	if actionObj == nil {
 		return nil, nil
 	}
 
-	return action.Render(force)
+	return actionObj.Render(force)
 }
 
 func (c *controllerImpl) render(force bool) (hadErrors bool) {
@@ -27,8 +27,8 @@ func (c *controllerImpl) render(force bool) (hadErrors bool) {
 	var img *streamdeck.ImageData
 	var err error
 
-	for i, action := range c.pageTop.actions {
-		img, err = c.renderAction(action, force)
+	for i, actionObj := range c.pageTop.actions {
+		img, err = c.renderAction(actionObj, force)
 		if err != nil {
 			log.Printf("Error rendering action: %v", err)
 			hadErrors = true

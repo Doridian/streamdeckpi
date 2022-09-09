@@ -26,11 +26,11 @@ func (c *controllerImpl) buttonLoop() {
 }
 
 func (c *controllerImpl) handleButtonPress(idx int, pressed bool) {
-	action := c.pageTop.actions[idx]
-	if action == nil {
+	actionObj := c.pageTop.actions[idx]
+	if actionObj == nil {
 		return
 	}
-	err := action.Run(pressed)
+	err := actionObj.Run(pressed)
 	if err != nil {
 		log.Printf("Error running action: %v", err)
 	}

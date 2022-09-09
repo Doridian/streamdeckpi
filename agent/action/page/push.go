@@ -1,9 +1,9 @@
 package page
 
-import "github.com/Doridian/streamdeckpi/agent/actions"
+import "github.com/Doridian/streamdeckpi/agent/action"
 
 type PushPage struct {
-	actions.ActionWithIcon
+	action.ActionWithIcon
 	Target string `yaml:"target"`
 }
 

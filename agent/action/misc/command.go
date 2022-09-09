@@ -7,14 +7,14 @@ import (
 	"time"
 
 	"github.com/Doridian/streamdeck"
-	"github.com/Doridian/streamdeckpi/agent/actions"
+	"github.com/Doridian/streamdeckpi/agent/action"
 	"github.com/Doridian/streamdeckpi/agent/controller"
 )
 
 type emptyStruct struct{}
 
 type Command struct {
-	actions.ActionBase
+	action.ActionBase
 
 	Command string   `yaml:"command"`
 	Args    []string `yaml:"args"`

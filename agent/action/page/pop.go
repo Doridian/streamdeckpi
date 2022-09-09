@@ -1,9 +1,9 @@
 package page
 
-import "github.com/Doridian/streamdeckpi/agent/actions"
+import "github.com/Doridian/streamdeckpi/agent/action"
 
 type PopPage struct {
-	actions.ActionWithIcon
+	action.ActionWithIcon
 }
 
 func (a *PopPage) Run(pressed bool) error {

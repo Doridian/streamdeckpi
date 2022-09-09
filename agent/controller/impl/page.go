@@ -4,15 +4,15 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Doridian/streamdeckpi/agent/actions"
-	actions_loader "github.com/Doridian/streamdeckpi/agent/actions/loader"
+	"github.com/Doridian/streamdeckpi/agent/action"
+	action_loader "github.com/Doridian/streamdeckpi/agent/action/loader"
 	"gopkg.in/yaml.v3"
 )
 
 type page struct {
 	path    string
 	timeout time.Duration
-	actions []actions.Action
+	actions []action.Action
 	refCnt  int
 }
 
@@ -50,14 +50,14 @@ func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
 	pageObj := &page{
 		path:    pageFile,
 		timeout: out.Timeout,
-		actions: make([]actions.Action, actionLen),
+		actions: make([]action.Action, actionLen),
 		refCnt:  0,
 	}
 
 	imageLoader := newPageImageLoader(c.imageLoader, pageObj)
 
 	for _, actionSchema := range out.Actions {
-		actionObj, err := actions_loader.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader, c)
+		actionObj, err := action_loader.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader, c)
 		if err != nil {
 			return nil, err
 		}

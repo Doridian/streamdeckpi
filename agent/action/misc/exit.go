@@ -3,11 +3,11 @@ package misc
 import (
 	"os"
 
-	"github.com/Doridian/streamdeckpi/agent/actions"
+	"github.com/Doridian/streamdeckpi/agent/action"
 )
 
 type Exit struct {
-	actions.ActionWithIcon
+	action.ActionWithIcon
 }
 
 func (a *Exit) Run(pressed bool) error {

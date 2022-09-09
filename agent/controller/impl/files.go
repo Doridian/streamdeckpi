@@ -39,7 +39,7 @@ func assertFileIsFile(file fs.File) error {
 
 func (c *controllerImpl) resolveFile(file string) (io.ReadCloser, error) {
 	if file == "" {
-		return nil, errors.New("refusing to open blank file")
+		return nil, errors.New("refusing to open empty filename")
 	}
 
 	var err error

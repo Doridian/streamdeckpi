@@ -1,9 +1,9 @@
 package misc
 
-import "github.com/Doridian/streamdeckpi/agent/actions"
+import "github.com/Doridian/streamdeckpi/agent/action"
 
 type None struct {
-	actions.ActionWithIcon
+	action.ActionWithIcon
 }
 
 func (a *None) Run(pressed bool) error {

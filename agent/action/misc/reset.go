@@ -1,9 +1,9 @@
 package misc
 
-import "github.com/Doridian/streamdeckpi/agent/actions"
+import "github.com/Doridian/streamdeckpi/agent/action"
 
 type Reset struct {
-	actions.ActionWithIcon
+	action.ActionWithIcon
 }
 
 func (a *Reset) Run(pressed bool) error {
