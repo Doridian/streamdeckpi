@@ -6,6 +6,10 @@ import (
 	"path"
 	"sync"
 
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
+
 	"github.com/Doridian/streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/controller"
 )
@@ -22,6 +26,7 @@ func newImageLoader(controller *controllerImpl, page *page) controller.ImageLoad
 	return &imageLoader{
 		path:       path.Dir(page.path),
 		controller: controller,
+		imageCache: make(map[string]*streamdeck.ImageData),
 	}
 }
 

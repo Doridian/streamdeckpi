@@ -2,7 +2,6 @@ package impl
 
 import (
 	"errors"
-	"io"
 	"time"
 
 	"github.com/Doridian/streamdeckpi/agent/actions"
@@ -38,13 +37,10 @@ func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
 	}
 	defer reader.Close()
 
-	data, err := io.ReadAll(reader)
-	if err != nil {
-		return nil, err
-	}
-
 	out := &pageSchema{}
-	err = yaml.Unmarshal(data, out)
+	decoder := yaml.NewDecoder(reader)
+	decoder.KnownFields(true)
+	err = decoder.Decode(out)
 	if err != nil {
 		return nil, err
 	}

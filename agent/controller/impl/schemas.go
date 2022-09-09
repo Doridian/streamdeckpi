@@ -3,13 +3,13 @@ package impl
 import (
 	"time"
 
-	"github.com/Doridian/streamdeckpi/agent/utils"
+	"gopkg.in/yaml.v3"
 )
 
 type actionSchema struct {
-	ActionName string               `yaml:"name"`
-	Button     [2]int               `yaml:"button"`
-	Parameters utils.YAMLRawMessage `yaml:"parameters"`
+	ActionName string    `yaml:"name"`
+	Button     [2]int    `yaml:"button"`
+	Parameters yaml.Node `yaml:"parameters"`
 }
 
 type pageSchema struct {

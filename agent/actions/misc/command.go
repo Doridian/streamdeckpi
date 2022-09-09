@@ -51,6 +51,10 @@ func (a *Command) ApplyConfig(imageLoader controller.ImageLoader, controller con
 		return err
 	}
 
+	if a.ExitCodeIcons == nil {
+		a.ExitCodeIcons = make(map[int]string)
+	}
+
 	a.currentIcon = a.Icon
 	a.doRender = true
 	return nil
@@ -95,14 +99,8 @@ func (a *Command) Run(pressed bool) error {
 		a.runLock.Unlock()
 	}
 
-	if a.ExitCodeIcons == nil {
-		a.setCurrentIcon(a.ExitDefaultIcon)
-		unlockRun()
-		return cmdErr
-	}
-
-	icon := a.ExitCodeIcons[exitCode]
-	if icon == "" {
+	icon, hadExitCodeHandler := a.ExitCodeIcons[exitCode]
+	if !hadExitCodeHandler {
 		icon = a.ExitDefaultIcon
 	}
 	a.setCurrentIcon(icon)
@@ -116,7 +114,10 @@ func (a *Command) Run(pressed bool) error {
 	}
 	a.runLock.Unlock()
 
-	return nil
+	if hadExitCodeHandler {
+		return nil
+	}
+	return cmdErr
 }
 
 func (a *Command) Name() string {

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"path"
 
@@ -32,19 +33,34 @@ func (c *controllerImpl) cleanPath(file string) (string, error) {
 	return file, nil
 }
 
+func assertFileIsFile(file fs.File) error {
+	stat, err := file.Stat()
+	if err != nil {
+		return err
+	}
+	if stat.IsDir() {
+		file.Close()
+		return errors.New("tried opening a directory")
+	}
+	return nil
+}
+
 func (c *controllerImpl) resolveFile(file string) (io.ReadCloser, error) {
-	fh, err := os.Open(path.Join(loadMainDirectory, file))
+	var err error
+	var reader fs.File
+
+	reader, err = os.Open(path.Join(loadMainDirectory, file))
 	if err == nil {
-		return fh, nil
+		return reader, assertFileIsFile(reader)
 	}
 
 	if !os.IsNotExist(err) {
 		return nil, fmt.Errorf("could not open real file: %w", err)
 	}
 
-	reader, err := agent.FS.Open(path.Join("embed", file))
+	reader, err = agent.FS.Open(path.Join("embed", file))
 	if err != nil {
 		return nil, fmt.Errorf("could not open embedded file: %w", err)
 	}
-	return reader, nil
+	return reader, assertFileIsFile(reader)
 }

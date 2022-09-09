@@ -8,7 +8,7 @@ import (
 	"github.com/Doridian/streamdeckpi/agent/actions/misc"
 	"github.com/Doridian/streamdeckpi/agent/actions/page"
 	"github.com/Doridian/streamdeckpi/agent/controller"
-	"github.com/Doridian/streamdeckpi/agent/utils"
+	"gopkg.in/yaml.v3"
 )
 
 var actionsMap = loadActions()
@@ -33,7 +33,7 @@ func loadActions() map[string](func() actions.Action) {
 	return res
 }
 
-func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader controller.ImageLoader, controller controller.Controller) (actions.Action, error) {
+func LoadAction(name string, config *yaml.Node, imageLoader controller.ImageLoader, controller controller.Controller) (actions.Action, error) {
 	actionCtor := actionsMap[name]
 	if actionCtor == nil {
 		return nil, fmt.Errorf("no action known with name: %s", name)
@@ -44,7 +44,7 @@ func LoadAction(name string, config *utils.YAMLRawMessage, imageLoader controlle
 		return nil, errors.New("action constructor failed")
 	}
 
-	err := config.Unmarshal(action.GetConfigRef())
+	err := config.Decode(action)
 	if err != nil {
 		return nil, err
 	}
