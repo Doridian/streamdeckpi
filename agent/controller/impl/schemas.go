@@ -8,7 +8,7 @@ import (
 
 type actionSchema struct {
 	ActionName string               `yaml:"name"`
-	Button     int                  `yaml:"button"`
+	Button     [2]int               `yaml:"button"`
 	Parameters utils.YAMLRawMessage `yaml:"parameters"`
 }
 

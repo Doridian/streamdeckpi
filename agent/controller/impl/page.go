@@ -65,7 +65,9 @@ func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
 		if err != nil {
 			return nil, err
 		}
-		pageObj.actions[actionSchema.Button] = actionObj
+
+		mappedButton := actionSchema.Button[0] + (actionSchema.Button[1] * int(c.dev.Columns))
+		pageObj.actions[mappedButton] = actionObj
 	}
 
 	pageObj.refCnt++

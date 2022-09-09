@@ -26,11 +26,13 @@ These files look as follows (buttons are organized however the Stream Deck devic
 timeout: 10s # Optional, if set: If no button is pressed in this period, go back to previous page
 actions:
 - name: some_action
-  button: 0 # Button indices start at 0!
+  button: [0,0] # Button coordinates start at [0,0] for top-left
+                # [0,1] is the button below [0,0]
+                # [1,0] is the button to the right of [0,0]
   parameters:
      name: "value"
 - name: some_other_action
-  button: 3
+  button: [3,0]
   parameters:
      number: 42
 ```
@@ -45,7 +47,7 @@ Replaces the current **page** on the stack with the given **page**.
 
 ```yaml
 name: swap_page
-button: 0
+button: [0,0]
 parameters:
     icon: some_icon.png
     target: some_page.yml
@@ -57,7 +59,7 @@ Pushes the given **page** onto the stack.
 
 ```yaml
 name: push_page
-button: 0
+button: [0,0]
 parameters:
     icon: some_icon.png
     target: some_page.yml
@@ -69,7 +71,7 @@ Pops the current **page** from the stack.
 
 ```yaml
 name: pop_page
-button: 0
+button: [0,0]
 parameters:
     icon: some_icon.png
 ```
@@ -82,7 +84,7 @@ Does nothing at all, useful if you want a button to do nothing.
 
 ```yaml
 name: none
-button: 0
+button: [0,0]
 parameters:
     icon: some_icon.png
 ```
@@ -93,7 +95,7 @@ Causes the agent process to exit gracefully.
 
 ```yaml
 name: exit
-button: 0
+button: [0,0]
 parameters:
     icon: some_icon.png
     exit_code: 0 # Optional, default is 0
@@ -105,7 +107,7 @@ Resets agent app to the default **page** causi.ng everything to go back to a sta
 
 ```yaml
 name: reset
-button: 0
+button: [0,0]
 parameters:
     icon: some_icon.png
 ```
@@ -116,7 +118,7 @@ Runs a shell command and can optionally define icons to be set on specific state
 
 ```yaml
 name: command
-button: 0
+button: [0,0]
 parameters:
     command: [echo, "Hello world"] # Command and arguments as an array
     icon: some_icon.png # Icon to use when the command has never been run or as
