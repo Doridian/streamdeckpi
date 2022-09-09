@@ -1,5 +1,7 @@
 package controller
 
+import "io"
+
 type Controller interface {
 	SwapPage(pageFile string) error
 	PushPage(pageFile string) error
@@ -9,4 +11,8 @@ type Controller interface {
 	Stop() error
 	Wait() error
 	Reset() error
+
+	ResolveFile(file string) (io.ReadCloser, error)
+	CleanPath(file string) (string, error)
+	LoadConfig(file string, v interface{}) error
 }

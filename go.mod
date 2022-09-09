@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/Doridian/streamdeck v0.2.0
+	github.com/kylegrantlucas/go-hass v0.0.4
 	gopkg.in/yaml.v3 v3.0.1
 )
 

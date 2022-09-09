@@ -6,7 +6,6 @@ import (
 
 	"github.com/Doridian/streamdeckpi/agent/action"
 	action_loader "github.com/Doridian/streamdeckpi/agent/action/loader"
-	"gopkg.in/yaml.v3"
 )
 
 type page struct {
@@ -17,7 +16,7 @@ type page struct {
 }
 
 func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
-	pageFile, err := c.cleanPath(pageFile)
+	pageFile, err := c.CleanPath(pageFile)
 	if err != nil {
 		return nil, err
 	}
@@ -31,16 +30,8 @@ func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
 		return cachedPage, nil
 	}
 
-	reader, err := c.resolveFile(pageFile)
-	if err != nil {
-		return nil, err
-	}
-	defer reader.Close()
-
 	out := &pageSchema{}
-	decoder := yaml.NewDecoder(reader)
-	decoder.KnownFields(true)
-	err = decoder.Decode(out)
+	err = c.LoadConfig(pageFile, out)
 	if err != nil {
 		return nil, err
 	}

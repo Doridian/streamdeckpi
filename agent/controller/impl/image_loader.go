@@ -42,7 +42,7 @@ func (l *imageLoader) GetBlankImage() *streamdeck.ImageData {
 }
 
 func (l *imageLoader) Load(pathSub string) (*streamdeck.ImageData, error) {
-	pathSub, err := l.controller.cleanPath(pathSub)
+	pathSub, err := l.controller.CleanPath(pathSub)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (l *imageLoader) Load(pathSub string) (*streamdeck.ImageData, error) {
 		return img, nil
 	}
 
-	reader, err := l.controller.resolveFile(pathSub)
+	reader, err := l.controller.ResolveFile(pathSub)
 	if err != nil {
 		return nil, fmt.Errorf("error resolving image: %w", err)
 	}
