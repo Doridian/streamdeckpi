@@ -106,13 +106,15 @@ func (a *Command) Run(pressed bool) error {
 	a.setCurrentIcon(icon)
 	unlockRun()
 
-	time.Sleep(a.ExitToIdleTime)
+	go func() {
+		time.Sleep(a.ExitToIdleTime)
 
-	a.runLock.Lock()
-	if a.runSymbol == localRunSymbol {
-		a.setCurrentIcon(a.Icon)
-	}
-	a.runLock.Unlock()
+		a.runLock.Lock()
+		if a.runSymbol == localRunSymbol {
+			a.setCurrentIcon(a.Icon)
+		}
+		a.runLock.Unlock()
+	}()
 
 	if hadExitCodeHandler {
 		return nil
