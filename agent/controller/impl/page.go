@@ -54,7 +54,7 @@ func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
 		refCnt:  0,
 	}
 
-	imageLoader := newImageLoader(c, pageObj)
+	imageLoader := newPageImageLoader(c.imageLoader, pageObj)
 
 	for _, actionSchema := range out.Actions {
 		actionObj, err := actions_loader.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader, c)

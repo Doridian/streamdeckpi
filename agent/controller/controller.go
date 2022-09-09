@@ -1,7 +1,5 @@
 package controller
 
-import "github.com/Doridian/streamdeck"
-
 type Controller interface {
 	SwapPage(pageFile string) error
 	PushPage(pageFile string) error
@@ -11,6 +9,4 @@ type Controller interface {
 	Stop() error
 	Wait() error
 	Reset() error
-
-	GetBlankImage() *streamdeck.ImageData
 }

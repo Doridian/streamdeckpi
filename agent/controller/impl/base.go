@@ -2,7 +2,6 @@ package impl
 
 import (
 	"errors"
-	"image"
 	"sync"
 
 	"github.com/Doridian/streamdeck"
@@ -28,27 +27,22 @@ type controllerImpl struct {
 
 	pageCache     map[string]*page
 	pageCacheLock sync.Mutex
+
+	imageLoader controller.ImageLoader
 }
 
 func NewController(dev *streamdeck.Device) (controller.Controller, error) {
-	img := image.NewRGBA(image.Rect(0, 0, int(dev.Pixels), int(dev.Pixels)))
-
-	convImg, err := dev.ConvertImage(img)
-	if err != nil {
-		return nil, err
+	ctrl := &controllerImpl{
+		pageStack: make([]*page, 0),
+		pageTop:   nil,
+		dev:       dev,
+		running:   false,
 	}
 
-	return &controllerImpl{
-		pageStack:  make([]*page, 0),
-		pageTop:    nil,
-		dev:        dev,
-		running:    false,
-		blankImage: convImg,
-	}, nil
-}
+	var err error
+	ctrl.imageLoader, err = newImageLoader(ctrl)
 
-func (c *controllerImpl) GetBlankImage() *streamdeck.ImageData {
-	return c.blankImage
+	return ctrl, err
 }
 
 func (c *controllerImpl) Start() error {

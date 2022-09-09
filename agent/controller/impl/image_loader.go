@@ -3,7 +3,6 @@ package impl
 import (
 	"fmt"
 	"image"
-	"path"
 	"sync"
 
 	_ "image/gif"
@@ -20,30 +19,42 @@ type imageLoader struct {
 
 	imageCache     map[string]*streamdeck.ImageData
 	imageCacheLock sync.RWMutex
+	blankImage     *streamdeck.ImageData
 }
 
-func newImageLoader(controller *controllerImpl, page *page) controller.ImageLoader {
-	return &imageLoader{
-		path:       path.Dir(page.path),
-		controller: controller,
-		imageCache: make(map[string]*streamdeck.ImageData),
+func newImageLoader(controller *controllerImpl) (controller.ImageLoader, error) {
+	img := image.NewRGBA(image.Rect(0, 0, int(controller.dev.Pixels), int(controller.dev.Pixels)))
+
+	convImg, err := controller.dev.ConvertImage(img)
+	if err != nil {
+		return nil, err
 	}
+
+	return &imageLoader{
+		controller: controller,
+		blankImage: convImg,
+		imageCache: make(map[string]*streamdeck.ImageData),
+	}, nil
 }
 
-func (l *imageLoader) Load(path string) (*streamdeck.ImageData, error) {
-	path, err := l.controller.cleanPath(path)
+func (l *imageLoader) GetBlankImage() *streamdeck.ImageData {
+	return l.blankImage
+}
+
+func (l *imageLoader) Load(pathSub string) (*streamdeck.ImageData, error) {
+	pathSub, err := l.controller.cleanPath(pathSub)
 	if err != nil {
 		return nil, err
 	}
 
 	l.imageCacheLock.RLock()
-	img, ok := l.imageCache[path]
+	img, ok := l.imageCache[pathSub]
 	l.imageCacheLock.RUnlock()
 	if ok {
 		return img, nil
 	}
 
-	reader, err := l.controller.resolveFile(path)
+	reader, err := l.controller.resolveFile(pathSub)
 	if err != nil {
 		return nil, fmt.Errorf("error resolving image: %w", err)
 	}
@@ -60,7 +71,7 @@ func (l *imageLoader) Load(path string) (*streamdeck.ImageData, error) {
 	}
 
 	l.imageCacheLock.Lock()
-	l.imageCache[path] = convImg
+	l.imageCache[pathSub] = convImg
 	l.imageCacheLock.Unlock()
 
 	return convImg, nil
