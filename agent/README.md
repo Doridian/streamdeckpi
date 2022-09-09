@@ -120,16 +120,19 @@ Runs a shell command and can optionally define icons to be set on specific state
 name: command
 button: [0,0]
 parameters:
-    command: [echo, "Hello world"] # Command and arguments as an array
-    icon: some_icon.png # Icon to use when the command has never been run or as
-                        # the default if no more specific icon is defined (see below)
+    command: echo         # Command to run
+    args: ["Hello world"] # Arguments as an array
+    icon: some_icon.png   # Icon to use when the command has never been run or as
+                          # the default if no more specific icon is defined (see below)
 
     running_icon: some_running_icon.png # Icon to use while the command is running (optional)
   
     exit_code_icons: # Optional, if not given will revert back to "icon" immediately after exit
       0: some_success_icon.png # Icon to use if the command exits with code 0 (usually, this means success)
       1: some_exit1_icon.png # Icon to use for exit code 1 (you can use any number exit code to handle)
-      default: some_error_icon.png # Icon to use if the command exits and no explicit icon is defined
+
+    exit_default_icon: some_error_icon.png # Icon to use if the command exits and no explicit icon is defined
     
     exit_to_idle_time: 5s # If this is set, will revert to "icon" after this time after the process exited
+                          # This is only relevant if exit_code_icons is defined!
 ```

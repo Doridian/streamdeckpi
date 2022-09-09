@@ -17,23 +17,25 @@ func (c *controllerImpl) renderAction(action actions.Action, force bool) (*strea
 	return action.Render(force)
 }
 
-func (c *controllerImpl) render() (hadErrors bool) {
+func (c *controllerImpl) render(force bool) (hadErrors bool) {
 	currentPage := c.pageTop
-	pageSwapped := currentPage != c.lastRenderedPage
+	if currentPage != c.lastRenderedPage {
+		force = true
+	}
 	c.lastRenderedPage = currentPage
 
 	var img *streamdeck.ImageData
 	var err error
 
 	for i, action := range c.pageTop.actions {
-		img, err = c.renderAction(action, pageSwapped)
+		img, err = c.renderAction(action, force)
 		if err != nil {
 			log.Printf("Error rendering action: %v", err)
 			hadErrors = true
 			img = nil
 		}
 
-		if pageSwapped && img == nil {
+		if force && img == nil {
 			img = c.blankImage
 		}
 
@@ -57,9 +59,9 @@ func (c *controllerImpl) renderLoop() {
 	frameWait := time.Duration(16) * time.Millisecond
 	errorWait := time.Duration(1) * time.Second
 
-	var hadErrors bool
+	hadErrors := false
 	for c.running {
-		hadErrors = c.render()
+		hadErrors = c.render(hadErrors)
 		if hadErrors {
 			time.Sleep(errorWait)
 		}

@@ -1,1 +1,8 @@
-buttons: []
+actions:
+- button: [1,1]
+  name: command
+  parameters:
+    icon: idle.png
+    running_icon: running.png
+    exit_default_icon: exit.png
+    exit_to_idle_time: 5s

@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"fmt"
 	"image"
 	"path"
 	"sync"
@@ -39,18 +40,18 @@ func (l *imageLoader) Load(path string) (*streamdeck.ImageData, error) {
 
 	reader, err := l.controller.resolveFile(path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error resolving image: %w", err)
 	}
 	defer reader.Close()
 
 	goImage, _, err := image.Decode(reader)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error decoding image: %w", err)
 	}
 
 	convImg, err := l.controller.dev.ConvertImage(goImage)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error converting image: %w", err)
 	}
 
 	l.imageCacheLock.Lock()

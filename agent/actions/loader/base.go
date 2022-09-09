@@ -14,8 +14,11 @@ import (
 var actionsMap = loadActions()
 
 func loadActions() map[string](func() actions.Action) {
-	actionsMapTmp := [](func() actions.Action){
+	actionsList := [](func() actions.Action){
 		func() actions.Action { return &misc.None{} },
+		func() actions.Action { return &misc.Exit{} },
+		func() actions.Action { return &misc.Reset{} },
+		func() actions.Action { return &misc.Command{} },
 
 		func() actions.Action { return &page.SwapPage{} },
 		func() actions.Action { return &page.SwapPage{} },
@@ -24,7 +27,7 @@ func loadActions() map[string](func() actions.Action) {
 	}
 
 	res := make(map[string](func() actions.Action))
-	for _, a := range actionsMapTmp {
+	for _, a := range actionsList {
 		res[a().Name()] = a
 	}
 	return res
