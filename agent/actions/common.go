@@ -16,10 +16,6 @@ func (a *ActionBase) ApplyConfig(imageLoader controller.ImageLoader, controller 
 	return nil
 }
 
-func (a *ActionBase) GetConfigRef() interface{} {
-	return a
-}
-
 type ActionWithIcon struct {
 	ActionBase
 	Icon string `yaml:"icon"`

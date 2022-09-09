@@ -6,9 +6,9 @@ import (
 )
 
 type Action interface {
-	// Return a reference to your config object in GetConfigRef
-	// When ApplyConfig is called, read whatever is in it (it will be written to by the config loader)
-	GetConfigRef() interface{}
+	// When ApplyConfig is called, apply config
+	// Your struct is expected to declare exported fields with YAML annotation
+	// for config values
 	ApplyConfig(imageLoader controller.ImageLoader, controller controller.Controller) error
 
 	Run(pressed bool) error
