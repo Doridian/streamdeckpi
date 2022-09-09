@@ -82,16 +82,21 @@ func (c *controllerImpl) Start() error {
 }
 
 func (c *controllerImpl) Reset() error {
-	c.pageWait.Lock()
-	defer c.pageWait.Unlock()
-
 	c.pageCacheLock.Lock()
 	c.pageCache = make(map[string]*page)
-	c.pageStack = make([]*page, 0)
-	c.pageTop = nil
 	c.pageCacheLock.Unlock()
 
-	return c.PushPage("./default.yml")
+	pageObj, err := c.resolvePage("default.yml")
+	if err != nil {
+		return err
+	}
+
+	c.pageWait.Lock()
+	c.pageStack = []*page{pageObj}
+	c.pageTop = pageObj
+	c.pageWait.Unlock()
+
+	return nil
 }
 
 func (c *controllerImpl) Stop() error {

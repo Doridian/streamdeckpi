@@ -2,6 +2,7 @@ package impl
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path"
@@ -38,9 +39,12 @@ func (c *controllerImpl) resolveFile(file string) (io.ReadCloser, error) {
 	}
 
 	if !os.IsNotExist(err) {
-		return nil, err
+		return nil, fmt.Errorf("could not open real file: %w", err)
 	}
 
-	reader, err := agent.FS.Open(file)
-	return reader, err
+	reader, err := agent.FS.Open(path.Join("embed", file))
+	if err != nil {
+		return nil, fmt.Errorf("could not open embedded file: %w", err)
+	}
+	return reader, nil
 }
