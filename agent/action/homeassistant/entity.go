@@ -12,17 +12,17 @@ type haConditionalIcons struct {
 	File      string      `yaml:"file"`
 }
 
-type HAEntityAction struct {
+type haEntityAction struct {
 	haEntityActionBase
 
 	Icons []haConditionalIcons `yaml:"icons"`
 }
 
-func (a *HAEntityAction) New() action.Action {
-	return &HAEntityAction{}
+func (a *haEntityAction) New() action.Action {
+	return &haEntityAction{}
 }
 
-func (a *HAEntityAction) OnState(entityID string, state haws.State) error {
+func (a *haEntityAction) OnState(entityID string, state haws.State) error {
 	foundIcon := ""
 
 	for _, icon := range a.Icons {
@@ -45,7 +45,7 @@ func (a *HAEntityAction) OnState(entityID string, state haws.State) error {
 	return nil
 }
 
-func (a *HAEntityAction) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
+func (a *haEntityAction) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
 	err := a.haEntityActionBase.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {
 		return err
@@ -65,6 +65,6 @@ func (a *HAEntityAction) ApplyConfig(config *yaml.Node, imageLoader controller.I
 	return nil
 }
 
-func (a *HAEntityAction) Name() string {
+func (a *haEntityAction) Name() string {
 	return "homeassistant_entity"
 }

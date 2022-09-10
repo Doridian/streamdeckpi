@@ -6,17 +6,17 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Brightness struct {
+type brightness struct {
 	action.ActionWithIcon
 
 	Brightness int `yaml:"brightness"`
 }
 
-func (a *Brightness) New() action.Action {
-	return &Brightness{}
+func (a *brightness) New() action.Action {
+	return &brightness{}
 }
 
-func (a *Brightness) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
+func (a *brightness) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
 	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {
 		return err
@@ -24,7 +24,7 @@ func (a *Brightness) ApplyConfig(config *yaml.Node, imageLoader controller.Image
 	return config.Decode(a)
 }
 
-func (a *Brightness) Run(pressed bool) error {
+func (a *brightness) Run(pressed bool) error {
 	if !pressed {
 		return nil
 	}
@@ -32,6 +32,6 @@ func (a *Brightness) Run(pressed bool) error {
 	return a.Controller.SetBrightness(a.Brightness)
 }
 
-func (a *Brightness) Name() string {
+func (a *brightness) Name() string {
 	return "brightness"
 }

@@ -6,16 +6,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type PushPage struct {
+type pushPage struct {
 	action.ActionWithIcon
 	Target string `yaml:"target"`
 }
 
-func (a *PushPage) New() action.Action {
-	return &PushPage{}
+func (a *pushPage) New() action.Action {
+	return &pushPage{}
 }
 
-func (a *PushPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
+func (a *pushPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
 	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {
 		return err
@@ -23,13 +23,13 @@ func (a *PushPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLo
 	return config.Decode(a)
 }
 
-func (a *PushPage) Run(pressed bool) error {
+func (a *pushPage) Run(pressed bool) error {
 	if !pressed {
 		return nil
 	}
 	return a.Controller.PushPage(a.Target)
 }
 
-func (a *PushPage) Name() string {
+func (a *pushPage) Name() string {
 	return "push_page"
 }

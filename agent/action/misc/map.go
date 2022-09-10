@@ -13,7 +13,7 @@ type mapActionConfig struct {
 	Parameters yaml.Node `yaml:"parameters"`
 }
 
-type Map struct {
+type reMap struct {
 	action.ActionBase
 
 	RunActionConfig    *mapActionConfig `yaml:"run"`
@@ -23,11 +23,11 @@ type Map struct {
 	renderAction action.Action
 }
 
-func (a *Map) New() action.Action {
-	return &Map{}
+func (a *reMap) New() action.Action {
+	return &reMap{}
 }
 
-func (a *Map) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
+func (a *reMap) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
 	err := a.ActionBase.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {
 		return err
@@ -51,14 +51,14 @@ func (a *Map) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader,
 	return nil
 }
 
-func (a *Map) Run(pressed bool) error {
+func (a *reMap) Run(pressed bool) error {
 	return a.runAction.Run(pressed)
 }
 
-func (a *Map) Render(force bool) (*streamdeck.ImageData, error) {
+func (a *reMap) Render(force bool) (*streamdeck.ImageData, error) {
 	return a.renderAction.Render(force)
 }
 
-func (a *Map) Name() string {
-	return "map"
+func (a *reMap) Name() string {
+	return "remap"
 }

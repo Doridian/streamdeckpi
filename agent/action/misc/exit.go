@@ -6,15 +6,15 @@ import (
 	"github.com/Doridian/streamdeckpi/agent/action"
 )
 
-type Exit struct {
+type exit struct {
 	action.ActionWithIcon
 }
 
-func (a *Exit) New() action.Action {
-	return &Exit{}
+func (a *exit) New() action.Action {
+	return &exit{}
 }
 
-func (a *Exit) Run(pressed bool) error {
+func (a *exit) Run(pressed bool) error {
 	if !pressed {
 		return nil
 	}
@@ -22,6 +22,6 @@ func (a *Exit) Run(pressed bool) error {
 	return nil
 }
 
-func (a *Exit) Name() string {
+func (a *exit) Name() string {
 	return "exit"
 }

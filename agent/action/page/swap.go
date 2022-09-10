@@ -6,16 +6,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type SwapPage struct {
+type swapPage struct {
 	action.ActionWithIcon
 	Target string `yaml:"target"`
 }
 
-func (a *SwapPage) New() action.Action {
-	return &SwapPage{}
+func (a *swapPage) New() action.Action {
+	return &swapPage{}
 }
 
-func (a *SwapPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, controller controller.Controller) error {
+func (a *swapPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, controller controller.Controller) error {
 	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, controller)
 	if err != nil {
 		return err
@@ -23,13 +23,13 @@ func (a *SwapPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLo
 	return config.Decode(a)
 }
 
-func (a *SwapPage) Run(pressed bool) error {
+func (a *swapPage) Run(pressed bool) error {
 	if !pressed {
 		return nil
 	}
 	return a.Controller.SwapPage(a.Target)
 }
 
-func (a *SwapPage) Name() string {
+func (a *swapPage) Name() string {
 	return "swap_page"
 }

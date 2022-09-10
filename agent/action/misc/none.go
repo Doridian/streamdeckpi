@@ -2,18 +2,18 @@ package misc
 
 import "github.com/Doridian/streamdeckpi/agent/action"
 
-type None struct {
+type none struct {
 	action.ActionWithIcon
 }
 
-func (a *None) New() action.Action {
-	return &None{}
+func (a *none) New() action.Action {
+	return &none{}
 }
 
-func (a *None) Run(pressed bool) error {
+func (a *none) Run(pressed bool) error {
 	return nil
 }
 
-func (a *None) Name() string {
+func (a *none) Name() string {
 	return "none"
 }

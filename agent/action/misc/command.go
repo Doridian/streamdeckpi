@@ -14,7 +14,7 @@ import (
 
 type emptyStruct struct{}
 
-type Command struct {
+type command struct {
 	action.ActionBase
 
 	Command string   `yaml:"command"`
@@ -34,11 +34,11 @@ type Command struct {
 	runLock   sync.Mutex
 }
 
-func (a *Command) New() action.Action {
-	return &Command{}
+func (a *command) New() action.Action {
+	return &command{}
 }
 
-func (a *Command) setCurrentIcon(icon string) {
+func (a *command) setCurrentIcon(icon string) {
 	if icon == "" {
 		icon = a.Icon
 	}
@@ -50,7 +50,7 @@ func (a *Command) setCurrentIcon(icon string) {
 	a.doRender = true
 }
 
-func (a *Command) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
+func (a *command) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
 	err := a.ActionBase.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {
 		return err
@@ -70,7 +70,7 @@ func (a *Command) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoa
 	return nil
 }
 
-func (a *Command) Run(pressed bool) error {
+func (a *command) Run(pressed bool) error {
 	if !pressed {
 		return nil
 	}
@@ -132,11 +132,11 @@ func (a *Command) Run(pressed bool) error {
 	return cmdErr
 }
 
-func (a *Command) Name() string {
+func (a *command) Name() string {
 	return "command"
 }
 
-func (a *Command) Render(force bool) (*streamdeck.ImageData, error) {
+func (a *command) Render(force bool) (*streamdeck.ImageData, error) {
 	if force || a.doRender {
 		a.doRender = false
 		return a.ImageLoader.Load(a.currentIcon)
