@@ -57,14 +57,10 @@ func (c *controllerImpl) renderLoop() {
 	defer c.runWait.Done()
 
 	frameWait := time.Duration(16) * time.Millisecond
-	errorWait := time.Duration(1) * time.Second
 
 	hadErrors := false
 	for c.running {
 		hadErrors = c.render(hadErrors)
-		if hadErrors {
-			time.Sleep(errorWait)
-		}
 		time.Sleep(frameWait)
 	}
 
