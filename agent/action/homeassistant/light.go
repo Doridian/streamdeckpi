@@ -18,6 +18,7 @@ type haLightAction struct {
 	baseImage  image.Image
 	renderIcon *streamdeck.ImageData
 	doRender   bool
+	lightColor color.Color
 }
 
 func (a *haLightAction) New() action.Action {
@@ -31,14 +32,13 @@ func convColorElement(elem interface{}, brightness float64) uint8 {
 }
 
 func (a *haLightAction) OnState(entityID string, state haws.State) error {
-	var goColor color.Color
 	if state.State == "off" {
-		goColor = color.Black
+		a.lightColor = color.Black
 	} else {
 		lightColorRGB := state.Attributes["rgb_color"].([]interface{})
 		brightness := state.Attributes["brightness"].(float64)
 
-		goColor = color.NRGBA{
+		a.lightColor = color.NRGBA{
 			R: convColorElement(lightColorRGB[0], brightness),
 			G: convColorElement(lightColorRGB[1], brightness),
 			B: convColorElement(lightColorRGB[2], brightness),
@@ -46,17 +46,8 @@ func (a *haLightAction) OnState(entityID string, state haws.State) error {
 		}
 	}
 
-	img := image.NewRGBA(a.baseImage.Bounds())
-
-	draw.Draw(img, img.Rect, image.NewUniform(goColor), image.Point{}, draw.Src)
-	draw.Draw(img, img.Rect, a.baseImage, image.Point{}, draw.Over)
-
-	convImg, err := a.ImageLoader.Convert(img)
-	if err == nil {
-		a.renderIcon = convImg
-		a.doRender = true
-	}
-	return err
+	a.doRender = true
+	return nil
 }
 
 func (a *haLightAction) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
@@ -94,11 +85,19 @@ func (a *haLightAction) Name() string {
 }
 
 func (a *haLightAction) Render(force bool) (*streamdeck.ImageData, error) {
-	if force || a.doRender {
-		img := a.renderIcon
-		a.doRender = false
-		return img, nil
+	if !force && !a.doRender {
+		return nil, nil
 	}
 
-	return nil, nil
+	img := image.NewRGBA(a.baseImage.Bounds())
+
+	draw.Draw(img, img.Rect, image.NewUniform(a.lightColor), image.Point{}, draw.Src)
+	draw.Draw(img, img.Rect, a.baseImage, image.Point{}, draw.Over)
+
+	convImg, err := a.ImageLoader.Convert(img)
+	if err == nil {
+		a.doRender = false
+	}
+
+	return convImg, err
 }
