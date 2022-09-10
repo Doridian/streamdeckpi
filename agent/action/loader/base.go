@@ -19,6 +19,7 @@ func loadActions() map[string](func() action.Action) {
 		func() action.Action { return &misc.None{} },
 		func() action.Action { return &misc.Exit{} },
 		func() action.Action { return &misc.Command{} },
+		func() action.Action { return &misc.Brightness{} },
 
 		func() action.Action { return &page.SwapPage{} },
 		func() action.Action { return &page.SwapPage{} },

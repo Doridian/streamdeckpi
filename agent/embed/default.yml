@@ -1,4 +1,20 @@
 actions:
+- button: [0,0]
+  name: brightness
+  parameters:
+    icon: running.png
+    brightness: 0
+- button: [1,0]
+  name: brightness
+  parameters:
+    icon: running.png
+    brightness: 50
+- button: [2,0]
+  name: brightness
+  parameters:
+    icon: running.png
+    brightness: 100
+  
 - button: [1,1]
   name: homeassistant_entity
   parameters:

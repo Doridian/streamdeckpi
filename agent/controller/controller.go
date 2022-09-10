@@ -12,6 +12,8 @@ type Controller interface {
 	Wait() error
 	Reset() error
 
+	SetBrightness(brightness int) error
+
 	ResolveFile(file string) (io.ReadCloser, error)
 	CleanPath(file string) (string, error)
 	LoadConfig(file string, v interface{}) error

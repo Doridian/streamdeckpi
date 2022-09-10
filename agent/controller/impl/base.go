@@ -16,7 +16,6 @@ type controllerImpl struct {
 	pageWait  sync.Mutex
 
 	lastRenderedPage *page
-	blankImage       *streamdeck.ImageData
 
 	running        bool
 	runWait        sync.WaitGroup
@@ -122,4 +121,11 @@ func (c *controllerImpl) stopSync(err error) error {
 	c.running = false
 	c.runWait.Wait()
 	return c.dev.Close()
+}
+
+func (c *controllerImpl) SetBrightness(brightness int) error {
+	if brightness < 0 || brightness > 100 {
+		return errors.New("invalid brightness, must be between 0 and 100")
+	}
+	return c.dev.SetBrightness(uint8(brightness))
 }

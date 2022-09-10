@@ -14,7 +14,6 @@ import (
 )
 
 type imageLoader struct {
-	path       string
 	controller *controllerImpl
 
 	imageCache     map[string]*streamdeck.ImageData

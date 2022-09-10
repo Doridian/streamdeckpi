@@ -13,8 +13,6 @@ type actionSchema struct {
 }
 
 type pageSchema struct {
-	path string
-
 	Timeout time.Duration  `yaml:"timeout"`
 	Actions []actionSchema `yaml:"actions"`
 }
