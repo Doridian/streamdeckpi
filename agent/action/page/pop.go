@@ -6,6 +6,10 @@ type PopPage struct {
 	action.ActionWithIcon
 }
 
+func (a *PopPage) New() action.Action {
+	return &PopPage{}
+}
+
 func (a *PopPage) Run(pressed bool) error {
 	if !pressed {
 		return nil

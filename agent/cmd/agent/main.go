@@ -5,8 +5,6 @@ import (
 
 	"github.com/Doridian/go-streamdeck"
 	controller_impl "github.com/Doridian/streamdeckpi/agent/controller/impl"
-
-	_ "embed"
 )
 
 func main() {

@@ -12,6 +12,10 @@ type Brightness struct {
 	Brightness int `yaml:"brightness"`
 }
 
+func (a *Brightness) New() action.Action {
+	return &Brightness{}
+}
+
 func (a *Brightness) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
 	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {

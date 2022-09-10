@@ -7,6 +7,8 @@ import (
 )
 
 type Action interface {
+	New() Action
+
 	// When ApplyConfig is called, apply config
 	// Your struct is expected to declare exported fields with YAML annotation
 	// for config values

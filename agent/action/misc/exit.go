@@ -10,6 +10,10 @@ type Exit struct {
 	action.ActionWithIcon
 }
 
+func (a *Exit) New() action.Action {
+	return &Exit{}
+}
+
 func (a *Exit) Run(pressed bool) error {
 	if !pressed {
 		return nil

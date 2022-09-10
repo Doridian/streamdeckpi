@@ -2,6 +2,7 @@ package homeassistant
 
 import (
 	"github.com/Doridian/go-haws"
+	"github.com/Doridian/streamdeckpi/agent/action"
 	"github.com/Doridian/streamdeckpi/agent/controller"
 	"gopkg.in/yaml.v3"
 )
@@ -15,6 +16,10 @@ type HAEntityAction struct {
 	haEntityActionBase
 
 	Icons []haConditionalIcons `yaml:"icons"`
+}
+
+func (a *HAEntityAction) New() action.Action {
+	return &HAEntityAction{}
 }
 
 func (a *HAEntityAction) OnState(entityID string, state haws.State) error {

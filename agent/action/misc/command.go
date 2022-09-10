@@ -34,6 +34,10 @@ type Command struct {
 	runLock   sync.Mutex
 }
 
+func (a *Command) New() action.Action {
+	return &Command{}
+}
+
 func (a *Command) setCurrentIcon(icon string) {
 	if icon == "" {
 		icon = a.Icon

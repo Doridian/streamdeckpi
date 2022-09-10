@@ -11,6 +11,10 @@ type SwapPage struct {
 	Target string `yaml:"target"`
 }
 
+func (a *SwapPage) New() action.Action {
+	return &SwapPage{}
+}
+
 func (a *SwapPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, controller controller.Controller) error {
 	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, controller)
 	if err != nil {

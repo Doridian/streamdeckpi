@@ -6,6 +6,10 @@ import (
 
 	"github.com/Doridian/streamdeckpi/agent/action"
 	action_loader "github.com/Doridian/streamdeckpi/agent/action/loader"
+
+	_ "github.com/Doridian/streamdeckpi/agent/action/homeassistant"
+	_ "github.com/Doridian/streamdeckpi/agent/action/misc"
+	_ "github.com/Doridian/streamdeckpi/agent/action/page"
 )
 
 type page struct {

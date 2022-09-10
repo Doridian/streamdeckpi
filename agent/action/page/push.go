@@ -11,6 +11,10 @@ type PushPage struct {
 	Target string `yaml:"target"`
 }
 
+func (a *PushPage) New() action.Action {
+	return &PushPage{}
+}
+
 func (a *PushPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
 	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {
