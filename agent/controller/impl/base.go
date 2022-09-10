@@ -2,6 +2,7 @@ package impl
 
 import (
 	"errors"
+	"log"
 	"sync"
 
 	"github.com/Doridian/go-streamdeck"
@@ -61,6 +62,9 @@ func (c *controllerImpl) Start() error {
 	if err != nil {
 		return err
 	}
+
+	ver, _ := c.dev.FirmwareVersion()
+	log.Printf("Firmware: %s", ver)
 
 	c.runError = nil
 	c.running = true

@@ -19,4 +19,4 @@ require (
 replace github.com/Doridian/streamdeckpi => ./
 
 // replace github.com/Doridian/go-haws => ../go-haws/
-// replace github.com/Doridian/go-streamdeck => ../streamdeck/
+// replace github.com/Doridian/go-streamdeck => ../go-streamdeck/
