@@ -64,7 +64,11 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 			return nil, err
 		}
 
-		instance.client.WaitAuth()
+		err = instance.client.WaitAuth()
+		if err != nil {
+			instance.client.Close()
+			return nil, err
+		}
 
 		err = instance.GetStates()
 		if err != nil {

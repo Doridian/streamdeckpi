@@ -3,7 +3,7 @@ module github.com/Doridian/streamdeckpi
 go 1.19
 
 require (
-	github.com/Doridian/go-haws v0.1.1
+	github.com/Doridian/go-haws v0.2.0
 	github.com/Doridian/streamdeck v0.2.0
 	gopkg.in/yaml.v3 v3.0.1
 )
