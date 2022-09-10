@@ -1,5 +1,7 @@
-github.com/Doridian/go-haws v0.2.0 h1:Pd5r1v1C6Je/cD9cVY+xMCS8QwgJO7ODDk9E4v7dcbU=
-github.com/Doridian/go-haws v0.2.0/go.mod h1:URhkP8sptqHuXVtLqdEX7fKx7GrgRlLSjuWKofY33dw=
+github.com/Doridian/go-haws v0.3.0 h1:EvTKEbvsQQ1tLxXDk6E3ciPKM9GOszWTRjAq94QjRW4=
+github.com/Doridian/go-haws v0.3.0/go.mod h1:URhkP8sptqHuXVtLqdEX7fKx7GrgRlLSjuWKofY33dw=
+github.com/Doridian/go-haws v0.3.1 h1:PKv9A7OeW6BGPbSO/YhMM9RDJKiNx1Fwu4Rb1xyd/a8=
+github.com/Doridian/go-haws v0.3.1/go.mod h1:URhkP8sptqHuXVtLqdEX7fKx7GrgRlLSjuWKofY33dw=
 github.com/Doridian/go-streamdeck v1.1.0 h1:ruXXS5xiTiCfG94Xstuiwta9jO0dIC2DW1nIp317q2E=
 github.com/Doridian/go-streamdeck v1.1.0/go.mod h1:mT1rKYl1d0w3JFI/zGhND8RcRZ3/pPGME9YR+1Y2Bh0=
 github.com/KarpelesLab/hid v0.1.0 h1:TQodVh83+piiiJbuoy8d1w2DFjkI3KS/8Efj0V05ur0=
