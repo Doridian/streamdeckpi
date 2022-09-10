@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/Doridian/go-haws v0.3.1
-	github.com/Doridian/go-streamdeck v1.1.1
+	github.com/Doridian/go-streamdeck v1.1.2
 	gopkg.in/yaml.v3 v3.0.1
 )
 
