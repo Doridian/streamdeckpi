@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/Doridian/streamdeck"
+	"github.com/Doridian/go-streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/controller"
 )
 

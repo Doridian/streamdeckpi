@@ -7,7 +7,7 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
-	"github.com/Doridian/streamdeck"
+	"github.com/Doridian/go-streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/controller"
 )
 

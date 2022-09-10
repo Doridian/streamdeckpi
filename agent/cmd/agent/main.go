@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Doridian/streamdeck"
+	"github.com/Doridian/go-streamdeck"
 	controller_impl "github.com/Doridian/streamdeckpi/agent/controller/impl"
 
 	_ "embed"

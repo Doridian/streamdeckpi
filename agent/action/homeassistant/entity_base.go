@@ -2,7 +2,7 @@ package homeassistant
 
 import (
 	"github.com/Doridian/go-haws"
-	"github.com/Doridian/streamdeck"
+	"github.com/Doridian/go-streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/controller"
 	"gopkg.in/yaml.v3"
 )

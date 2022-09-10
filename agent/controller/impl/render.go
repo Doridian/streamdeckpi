@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/Doridian/streamdeck"
+	"github.com/Doridian/go-streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/action"
 )
 
