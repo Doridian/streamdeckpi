@@ -38,6 +38,7 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 	if !ok {
 		instance = &haInstance{
 			stateReceiverMap: make(map[string][]haStateReceiver),
+			states:           make(map[string]haws.State),
 		}
 
 		path := path.Join("/global/homeassistant", fmt.Sprintf("%s.yml", name))

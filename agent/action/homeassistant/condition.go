@@ -92,7 +92,7 @@ func (c *haCondition) Evaluate(stateStr string) (bool, error) {
 		case compareGreaterThanOrEqual:
 			return stateNum >= c.valueNum, nil
 		default:
-			return false, errors.New("invalid number comparison, this is a bug!")
+			return false, errors.New("invalid number comparison, this is a bug")
 		}
 	}
 
@@ -102,6 +102,6 @@ func (c *haCondition) Evaluate(stateStr string) (bool, error) {
 	case compareNotEquals:
 		return stateStr != c.valueStr, nil
 	default:
-		return false, errors.New("invalid string comparison, this is a bug!")
+		return false, errors.New("invalid string comparison, this is a bug")
 	}
 }
