@@ -1,28 +1,12 @@
 actions:
 - button: [0,0]
-  name: brightness
-  parameters:
-    icon: running.png
-    brightness: 0
-- button: [1,0]
-  name: brightness
-  parameters:
-    icon: running.png
-    brightness: 50
-- button: [2,0]
-  name: brightness
-  parameters:
-    icon: running.png
-    brightness: 100
-  
-- button: [1,1]
-  name: homeassistant_entity
+  name: homeassistant_light
   parameters:
     domain: light
-    entity: light.office_desk_strip
+    entity: light.tv_left_light
     service_name: toggle
 
-    default_icon: running.png
+    icon: light.png
     icons:
     - file: exit.png
       condition:

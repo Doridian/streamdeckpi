@@ -38,7 +38,7 @@ func (a *haEntityAction) OnState(entityID string, state haws.State) error {
 	}
 
 	if foundIcon == "" {
-		foundIcon = a.DefaultIcon
+		foundIcon = a.Icon
 	}
 
 	a.currentIcon = foundIcon

@@ -18,7 +18,7 @@ type haEntityActionBase struct {
 	ServiceTarget *haws.CallServiceTarget `yaml:"service_target"`
 
 	// TODO: Error icon and timeout
-	DefaultIcon string `yaml:"default_icon"`
+	Icon string `yaml:"icon"`
 
 	currentIcon      string
 	lastRenderedIcon string
@@ -35,7 +35,7 @@ func (a *haEntityActionBase) ApplyConfig(config *yaml.Node, imageLoader controll
 		return err
 	}
 
-	a.currentIcon = a.DefaultIcon
+	a.currentIcon = a.Icon
 	if a.ServiceTarget == nil {
 		a.ServiceTarget = &haws.CallServiceTarget{
 			EntityID: []string{a.Entity},
