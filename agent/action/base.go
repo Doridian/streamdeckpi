@@ -3,13 +3,14 @@ package action
 import (
 	"github.com/Doridian/streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/controller"
+	"gopkg.in/yaml.v3"
 )
 
 type Action interface {
 	// When ApplyConfig is called, apply config
 	// Your struct is expected to declare exported fields with YAML annotation
 	// for config values
-	ApplyConfig(imageLoader controller.ImageLoader, controller controller.Controller) error
+	ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error
 
 	Run(pressed bool) error
 	Name() string

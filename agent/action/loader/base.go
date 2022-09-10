@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Doridian/streamdeckpi/agent/action"
+	"github.com/Doridian/streamdeckpi/agent/action/homeassistant"
 	"github.com/Doridian/streamdeckpi/agent/action/misc"
 	"github.com/Doridian/streamdeckpi/agent/action/page"
 	"github.com/Doridian/streamdeckpi/agent/controller"
@@ -17,13 +18,14 @@ func loadActions() map[string](func() action.Action) {
 	actionsList := [](func() action.Action){
 		func() action.Action { return &misc.None{} },
 		func() action.Action { return &misc.Exit{} },
-		func() action.Action { return &misc.Reset{} },
 		func() action.Action { return &misc.Command{} },
 
 		func() action.Action { return &page.SwapPage{} },
 		func() action.Action { return &page.SwapPage{} },
 		func() action.Action { return &page.PushPage{} },
 		func() action.Action { return &page.PopPage{} },
+
+		func() action.Action { return &homeassistant.HAEntityAction{} },
 	}
 
 	res := make(map[string](func() action.Action))
@@ -33,7 +35,7 @@ func loadActions() map[string](func() action.Action) {
 	return res
 }
 
-func LoadAction(name string, config *yaml.Node, imageLoader controller.ImageLoader, controller controller.Controller) (action.Action, error) {
+func LoadAction(name string, config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) (action.Action, error) {
 	actionCtor := actionsMap[name]
 	if actionCtor == nil {
 		return nil, fmt.Errorf("no action known with name: %s", name)
@@ -44,11 +46,7 @@ func LoadAction(name string, config *yaml.Node, imageLoader controller.ImageLoad
 		return nil, errors.New("action constructor failed")
 	}
 
-	err := config.Decode(actionObj)
-	if err != nil {
-		return nil, err
-	}
-	err = actionObj.ApplyConfig(imageLoader, controller)
+	err := actionObj.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {
 		return nil, err
 	}

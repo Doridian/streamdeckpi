@@ -1,10 +1,18 @@
 actions:
 - button: [1,1]
-  name: command
+  name: homeassistant_entity
   parameters:
-    command: ping 
-    args: ["-c2", "127.0.0.1"]
-    icon: idle.png
-    running_icon: running.png
-    exit_default_icon: exit.png
-    exit_to_idle_time: 5s
+    domain: light
+    entity: light.office_desk_strip
+    service_name: toggle
+
+    default_icon: running.png
+    icons:
+    - file: exit.png
+      condition:
+        comparison: ==
+        value: on
+    - file: idle.png
+      condition:
+        comparison: ==
+        value: off

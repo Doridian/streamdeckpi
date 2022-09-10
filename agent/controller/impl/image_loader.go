@@ -22,16 +22,16 @@ type imageLoader struct {
 	blankImage     *streamdeck.ImageData
 }
 
-func newImageLoader(controller *controllerImpl) (controller.ImageLoader, error) {
-	img := image.NewRGBA(image.Rect(0, 0, int(controller.dev.Pixels), int(controller.dev.Pixels)))
+func newImageLoader(ctrl *controllerImpl) (controller.ImageLoader, error) {
+	img := image.NewRGBA(image.Rect(0, 0, int(ctrl.dev.Pixels), int(ctrl.dev.Pixels)))
 
-	convImg, err := controller.dev.ConvertImage(img)
+	convImg, err := ctrl.dev.ConvertImage(img)
 	if err != nil {
 		return nil, err
 	}
 
 	return &imageLoader{
-		controller: controller,
+		controller: ctrl,
 		blankImage: convImg,
 		imageCache: make(map[string]*streamdeck.ImageData),
 	}, nil

@@ -9,6 +9,7 @@ import (
 	"github.com/Doridian/streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/action"
 	"github.com/Doridian/streamdeckpi/agent/controller"
+	"gopkg.in/yaml.v3"
 )
 
 type emptyStruct struct{}
@@ -45,8 +46,13 @@ func (a *Command) setCurrentIcon(icon string) {
 	a.doRender = true
 }
 
-func (a *Command) ApplyConfig(imageLoader controller.ImageLoader, controller controller.Controller) error {
-	err := a.ActionBase.ApplyConfig(imageLoader, controller)
+func (a *Command) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
+	err := a.ActionBase.ApplyConfig(config, imageLoader, ctrl)
+	if err != nil {
+		return err
+	}
+
+	err = a.ApplyConfig(config, imageLoader, ctrl)
 	if err != nil {
 		return err
 	}

@@ -1,42 +1,33 @@
 package homeassistant
 
 import (
-	"fmt"
-	"path"
-
+	"github.com/Doridian/streamdeckpi/agent/action"
 	"github.com/Doridian/streamdeckpi/agent/controller"
-	ha "github.com/kylegrantlucas/go-hass"
+	"gopkg.in/yaml.v3"
 )
 
-type haInstanceConfig struct {
-	Url   string `yaml:"url"`
-	Token string `yaml:"token"`
+type haAction struct {
+	action.ActionBase
+
+	Instance string `yaml:"instance"`
+	instance *haInstance
 }
 
-var haAccessors map[string]*ha.Access
-
-func GetHomeAssistant(ctrl controller.Controller, id string) (*ha.Access, error) {
-	if id == "" {
-		id = "default"
+func (a *haAction) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
+	err := a.ActionBase.ApplyConfig(config, imageLoader, ctrl)
+	if err != nil {
+		return err
 	}
 
-	access, ok := haAccessors[id]
-	if !ok {
-		config := &haInstanceConfig{}
-
-		path := path.Join("/global/homeassistant", fmt.Sprintf("%s.yml", id))
-		path, err := ctrl.CleanPath(path)
-		if err != nil {
-			return nil, err
-		}
-
-		err = ctrl.LoadConfig(path, config)
-		if err != nil {
-			return nil, err
-		}
-
-		access = ha.NewAccess(config.Url, config.Token)
+	err = config.Decode(a)
+	if err != nil {
+		return err
 	}
 
-	return access, nil
+	a.instance, err = GetHomeAssistant(ctrl, a.Instance)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

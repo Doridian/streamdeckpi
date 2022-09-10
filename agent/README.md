@@ -101,17 +101,6 @@ parameters:
     exit_code: 0 # Optional, default is 0
 ```
 
-#### reset
-
-Resets agent app to the default **page** causi.ng everything to go back to a state as if the app just started
-
-```yaml
-name: reset
-button: [0,0]
-parameters:
-    icon: some_icon.png
-```
-
 #### shell
 
 Runs a shell command and can optionally define icons to be set on specific states.
