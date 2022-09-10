@@ -17,6 +17,7 @@ type haEntityActionBase struct {
 	ServiceData   map[string]interface{}  `yaml:"service_data"`
 	ServiceTarget *haws.CallServiceTarget `yaml:"service_target"`
 
+	// TODO: Error icon and timeout
 	DefaultIcon string `yaml:"default_icon"`
 
 	currentIcon      string
