@@ -28,7 +28,7 @@ type controllerImpl struct {
 	pageCache     map[string]*page
 	pageCacheLock sync.Mutex
 
-	imageLoader controller.ImageLoader
+	imageHelper controller.ImageHelper
 }
 
 func NewController(dev *streamdeck.Device) (controller.Controller, error) {
@@ -40,7 +40,7 @@ func NewController(dev *streamdeck.Device) (controller.Controller, error) {
 	}
 
 	var err error
-	ctrl.imageLoader, err = newImageLoader(ctrl)
+	ctrl.imageHelper, err = newImageHelper(ctrl)
 
 	return ctrl, err
 }

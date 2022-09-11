@@ -50,8 +50,8 @@ func (a *haLightAction) OnState(entityID string, state haws.State) error {
 	return nil
 }
 
-func (a *haLightAction) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.haEntityActionBase.ApplyConfig(config, imageLoader, ctrl)
+func (a *haLightAction) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.haEntityActionBase.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}
@@ -65,12 +65,12 @@ func (a *haLightAction) ApplyConfig(config *yaml.Node, imageLoader controller.Im
 		a.Domain = "light"
 	}
 
-	baseImage, err := imageLoader.LoadNoConvert(a.Icon)
+	baseImage, err := imageHelper.LoadNoConvert(a.Icon)
 	if err != nil {
 		return err
 	}
 	a.baseImage = baseImage
-	a.renderIcon, err = imageLoader.Convert(a.baseImage)
+	a.renderIcon, err = imageHelper.Convert(a.baseImage)
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func (a *haLightAction) Render(force bool) (*streamdeck.ImageData, error) {
 	draw.Draw(img, img.Rect, image.NewUniform(a.lightColor), image.Point{}, draw.Src)
 	draw.Draw(img, img.Rect, a.baseImage, image.Point{}, draw.Over)
 
-	convImg, err := a.ImageLoader.Convert(img)
+	convImg, err := a.ImageHelper.Convert(img)
 	if err == nil {
 		a.doRender = false
 	}

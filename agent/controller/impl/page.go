@@ -49,10 +49,10 @@ func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
 		refCnt:  0,
 	}
 
-	imageLoader := newPageImageLoader(c.imageLoader, pageObj)
+	imageHelper := newPageImageHelper(c.imageHelper, pageObj)
 
 	for _, actionSchema := range out.Actions {
-		actionObj, err := action_loader.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageLoader, c)
+		actionObj, err := action_loader.LoadAction(actionSchema.ActionName, &actionSchema.Parameters, imageHelper, c)
 		if err != nil {
 			return nil, err
 		}

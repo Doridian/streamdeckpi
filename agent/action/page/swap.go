@@ -15,8 +15,8 @@ func (a *swapPage) New() action.Action {
 	return &swapPage{}
 }
 
-func (a *swapPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, controller controller.Controller) error {
-	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, controller)
+func (a *swapPage) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, controller controller.Controller) error {
+	err := a.ActionWithIcon.ApplyConfig(config, imageHelper, controller)
 	if err != nil {
 		return err
 	}

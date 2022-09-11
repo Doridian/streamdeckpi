@@ -9,7 +9,7 @@ import (
 type haCondition struct {
 	valueStr   string `yaml:"value"`
 	comparison int
-	valueNum   int64
+	valueNum   float64
 }
 
 type haConditionYaml struct {
@@ -72,13 +72,13 @@ func (c *haCondition) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	c.valueNum, err = strconv.ParseInt(v.Value, 10, 64)
+	c.valueNum, err = strconv.ParseFloat(v.Value, 64)
 	return err
 }
 
 func (c *haCondition) Evaluate(stateStr string) (bool, error) {
 	if isNumericComparison(c.comparison) {
-		stateNum, err := strconv.ParseInt(stateStr, 10, 64)
+		stateNum, err := strconv.ParseFloat(stateStr, 64)
 		if err != nil {
 			return false, err
 		}

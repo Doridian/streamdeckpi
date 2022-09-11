@@ -15,8 +15,8 @@ func (a *pushPage) New() action.Action {
 	return &pushPage{}
 }
 
-func (a *pushPage) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, ctrl)
+func (a *pushPage) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.ActionWithIcon.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}

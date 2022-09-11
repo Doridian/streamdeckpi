@@ -24,8 +24,8 @@ type haEntityActionBase struct {
 	lastRenderedIcon string
 }
 
-func (a *haEntityActionBase) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.haAction.ApplyConfig(config, imageLoader, ctrl)
+func (a *haEntityActionBase) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.haAction.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}
@@ -51,7 +51,7 @@ func (a *haEntityActionBase) Render(force bool) (*streamdeck.ImageData, error) {
 	}
 
 	a.lastRenderedIcon = a.currentIcon
-	return a.ImageLoader.Load(a.lastRenderedIcon)
+	return a.ImageHelper.Load(a.lastRenderedIcon)
 }
 
 func (a *haEntityActionBase) Run(pressed bool) error {

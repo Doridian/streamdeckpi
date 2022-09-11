@@ -16,8 +16,8 @@ func (a *brightness) New() action.Action {
 	return &brightness{}
 }
 
-func (a *brightness) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.ActionWithIcon.ApplyConfig(config, imageLoader, ctrl)
+func (a *brightness) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.ActionWithIcon.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}

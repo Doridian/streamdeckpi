@@ -50,13 +50,13 @@ func (a *command) setCurrentIcon(icon string) {
 	a.doRender = true
 }
 
-func (a *command) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.ActionBase.ApplyConfig(config, imageLoader, ctrl)
+func (a *command) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.ActionBase.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}
 
-	err = a.ApplyConfig(config, imageLoader, ctrl)
+	err = a.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}
@@ -139,7 +139,7 @@ func (a *command) Name() string {
 func (a *command) Render(force bool) (*streamdeck.ImageData, error) {
 	if force || a.doRender {
 		a.doRender = false
-		return a.ImageLoader.Load(a.currentIcon)
+		return a.ImageHelper.Load(a.currentIcon)
 	}
 	return nil, nil
 }

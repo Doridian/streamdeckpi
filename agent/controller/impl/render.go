@@ -36,7 +36,7 @@ func (c *controllerImpl) render(force bool) (hadErrors bool) {
 		}
 
 		if force && img == nil {
-			img = c.imageLoader.GetBlankImage()
+			img = c.imageHelper.GetBlankImage()
 		}
 
 		if img == nil {

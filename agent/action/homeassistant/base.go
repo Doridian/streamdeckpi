@@ -13,8 +13,8 @@ type haAction struct {
 	instance *haInstance
 }
 
-func (a *haAction) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.ActionBase.ApplyConfig(config, imageLoader, ctrl)
+func (a *haAction) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.ActionBase.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}

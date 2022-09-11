@@ -15,7 +15,7 @@ func RegisterAction(impl action.Action) {
 	actionsMap[impl.Name()] = impl
 }
 
-func LoadAction(name string, config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) (action.Action, error) {
+func LoadAction(name string, config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) (action.Action, error) {
 	actionCtor := actionsMap[name]
 	if actionCtor == nil {
 		return nil, fmt.Errorf("no action known with name: %s", name)
@@ -26,7 +26,7 @@ func LoadAction(name string, config *yaml.Node, imageLoader controller.ImageLoad
 		return nil, errors.New("action constructor failed")
 	}
 
-	err := actionObj.ApplyConfig(config, imageLoader, ctrl)
+	err := actionObj.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return nil, err
 	}

@@ -7,17 +7,17 @@ import (
 )
 
 type ActionBase struct {
-	ImageLoader controller.ImageLoader
+	ImageHelper controller.ImageHelper
 	Controller  controller.Controller
 }
 
-func (a *ActionBase) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
+func (a *ActionBase) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
 	err := config.Decode(a)
 	if err != nil {
 		return err
 	}
 
-	a.ImageLoader = imageLoader
+	a.ImageHelper = imageHelper
 	a.Controller = ctrl
 	return nil
 }
@@ -27,8 +27,8 @@ type ActionWithIcon struct {
 	Icon string `yaml:"icon"`
 }
 
-func (a *ActionWithIcon) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.ActionBase.ApplyConfig(config, imageLoader, ctrl)
+func (a *ActionWithIcon) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.ActionBase.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (a *ActionWithIcon) ApplyConfig(config *yaml.Node, imageLoader controller.I
 
 func (a *ActionWithIcon) Render(force bool) (*streamdeck.ImageData, error) {
 	if force {
-		return a.ImageLoader.Load(a.Icon)
+		return a.ImageHelper.Load(a.Icon)
 	}
 	return nil, nil
 }

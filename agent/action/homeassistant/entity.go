@@ -45,8 +45,8 @@ func (a *haEntityAction) OnState(entityID string, state haws.State) error {
 	return nil
 }
 
-func (a *haEntityAction) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.haEntityActionBase.ApplyConfig(config, imageLoader, ctrl)
+func (a *haEntityAction) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.haEntityActionBase.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}

@@ -6,7 +6,7 @@ import (
 	"github.com/Doridian/go-streamdeck"
 )
 
-type ImageLoader interface {
+type ImageHelper interface {
 	Load(path string) (*streamdeck.ImageData, error)
 
 	LoadNoConvert(pathSub string) (image.Image, error)

@@ -27,8 +27,8 @@ func (a *reMap) New() action.Action {
 	return &reMap{}
 }
 
-func (a *reMap) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error {
-	err := a.ActionBase.ApplyConfig(config, imageLoader, ctrl)
+func (a *reMap) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.ActionBase.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}
@@ -38,12 +38,12 @@ func (a *reMap) ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoade
 		return err
 	}
 
-	a.runAction, err = loader.LoadAction(a.RunActionConfig.Name, &a.RunActionConfig.Parameters, imageLoader, ctrl)
+	a.runAction, err = loader.LoadAction(a.RunActionConfig.Name, &a.RunActionConfig.Parameters, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}
 
-	a.renderAction, err = loader.LoadAction(a.RenderActionConfig.Name, &a.RenderActionConfig.Parameters, imageLoader, ctrl)
+	a.renderAction, err = loader.LoadAction(a.RenderActionConfig.Name, &a.RenderActionConfig.Parameters, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}

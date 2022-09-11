@@ -13,7 +13,7 @@ import (
 	"github.com/Doridian/streamdeckpi/agent/controller"
 )
 
-type imageLoader struct {
+type imageHelper struct {
 	controller *controllerImpl
 
 	imageCache     map[string]*streamdeck.ImageData
@@ -21,7 +21,7 @@ type imageLoader struct {
 	blankImage     *streamdeck.ImageData
 }
 
-func newImageLoader(ctrl *controllerImpl) (controller.ImageLoader, error) {
+func newImageHelper(ctrl *controllerImpl) (controller.ImageHelper, error) {
 	img := image.NewRGBA(image.Rect(0, 0, int(ctrl.dev.Pixels), int(ctrl.dev.Pixels)))
 
 	convImg, err := ctrl.dev.ConvertImage(img)
@@ -29,18 +29,18 @@ func newImageLoader(ctrl *controllerImpl) (controller.ImageLoader, error) {
 		return nil, err
 	}
 
-	return &imageLoader{
+	return &imageHelper{
 		controller: ctrl,
 		blankImage: convImg,
 		imageCache: make(map[string]*streamdeck.ImageData),
 	}, nil
 }
 
-func (l *imageLoader) GetBlankImage() *streamdeck.ImageData {
+func (l *imageHelper) GetBlankImage() *streamdeck.ImageData {
 	return l.blankImage
 }
 
-func (l *imageLoader) LoadNoConvert(pathSub string) (image.Image, error) {
+func (l *imageHelper) LoadNoConvert(pathSub string) (image.Image, error) {
 	reader, err := l.controller.ResolveFile(pathSub)
 	if err != nil {
 		return nil, fmt.Errorf("error resolving image: %w", err)
@@ -55,11 +55,11 @@ func (l *imageLoader) LoadNoConvert(pathSub string) (image.Image, error) {
 	return goImage, nil
 }
 
-func (l *imageLoader) Convert(img image.Image) (*streamdeck.ImageData, error) {
+func (l *imageHelper) Convert(img image.Image) (*streamdeck.ImageData, error) {
 	return l.controller.dev.ConvertImage(img)
 }
 
-func (l *imageLoader) Load(pathSub string) (*streamdeck.ImageData, error) {
+func (l *imageHelper) Load(pathSub string) (*streamdeck.ImageData, error) {
 	pathSub, err := l.controller.CleanPath(pathSub)
 	if err != nil {
 		return nil, err

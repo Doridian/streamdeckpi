@@ -12,7 +12,7 @@ type Action interface {
 	// When ApplyConfig is called, apply config
 	// Your struct is expected to declare exported fields with YAML annotation
 	// for config values
-	ApplyConfig(config *yaml.Node, imageLoader controller.ImageLoader, ctrl controller.Controller) error
+	ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error
 
 	Run(pressed bool) error
 	Name() string
