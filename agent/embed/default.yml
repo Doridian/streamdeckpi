@@ -7,12 +7,37 @@ actions:
     service_name: toggle
 
     icon: light.png
-    icons:
-    - file: exit.png
+
+- button: [0,1]
+  name: homeassistant_entity
+  parameters:
+    domain: fan
+    entity: fan.corner_ceiling_fan
+    service_name: set_percentage
+
+    icon: 0.png
+    service_data:
+      percentage: 30
+
+    conditions:
+    - icon: 3.png
+      service_data:
+        percentage: 0
       condition:
-        comparison: ==
-        value: on
-    - file: idle.png
+        src: percentage
+        comparison: gt
+        value: 70
+    - icon: 2.png
+      service_data:
+        percentage: 100
       condition:
-        comparison: ==
-        value: off
+        src: percentage
+        comparison: gt
+        value: 40
+    - icon: 1.png
+      service_data:
+        percentage: 50
+      condition:
+        src: percentage
+        comparison: gt
+        value: 0

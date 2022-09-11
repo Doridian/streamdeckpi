@@ -4,17 +4,21 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+
+	"github.com/Doridian/go-haws"
 )
 
 type haCondition struct {
-	valueStr   string `yaml:"value"`
+	src        string
 	comparison int
+	valueRaw   interface{} `yaml:"value"`
 	valueNum   float64
 }
 
 type haConditionYaml struct {
-	Comparison string `yaml:"comparison"`
-	Value      string `yaml:"value"`
+	Src        string      `yaml:"src"`
+	Comparison string      `yaml:"comparison"`
+	Value      interface{} `yaml:"value"`
 }
 
 const (
@@ -62,35 +66,89 @@ func (c *haCondition) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	var ok bool
+
+	c.src = v.Src
+	if c.src == "" {
+		c.src = "state"
+	}
+
 	c.comparison, ok = comparisonEnumMap[v.Comparison]
 	if !ok {
 		return fmt.Errorf("unknown comparison: %s", v.Comparison)
 	}
 
 	if !isNumericComparison(c.comparison) {
-		c.valueStr = v.Value
+		c.valueRaw = v.Value
 		return nil
 	}
 
-	c.valueNum, err = strconv.ParseFloat(v.Value, 64)
-	return err
+	c.valueNum, ok = v.Value.(float64)
+	if ok {
+		return nil
+	}
+
+	valInt, ok := v.Value.(int)
+	if ok {
+		c.valueNum = float64(valInt)
+		return nil
+	}
+
+	return errors.New("attempt to create number comparison with non-number")
 }
 
-func (c *haCondition) Evaluate(stateStr string) (bool, error) {
+func coerceNumber(val interface{}) (float64, bool) {
+	valNum, ok := val.(float64)
+	if ok {
+		return valNum, true
+	}
+
+	valInt, ok := val.(int)
+	if ok {
+		return float64(valInt), true
+	}
+
+	valStr, ok := val.(string)
+	if !ok {
+		return 0, false
+	}
+
+	valNum, err := strconv.ParseFloat(valStr, 64)
+	if err == nil {
+		return 0, false
+	}
+
+	return valNum, true
+}
+
+func (c *haCondition) Evaluate(state *haws.State) (bool, error) {
+	var val interface{}
+	if c.src == "state" {
+		val = state.State
+	} else if state.Attributes != nil {
+		val = state.Attributes[c.src]
+	}
+
 	if isNumericComparison(c.comparison) {
-		stateNum, err := strconv.ParseFloat(stateStr, 64)
-		if err != nil {
-			return false, err
+		var valNum float64
+		if val == nil {
+			valNum = 0
+		} else {
+			var ok bool
+			valNum, ok = coerceNumber(val)
+			if !ok {
+				return false, errors.New("attempt to use number comparison on non-number")
+			}
 		}
+
 		switch c.comparison {
 		case compareLessThan:
-			return stateNum < c.valueNum, nil
+			return valNum < c.valueNum, nil
 		case compareLessThanOrEqual:
-			return stateNum <= c.valueNum, nil
+			return valNum <= c.valueNum, nil
 		case compareGreaterThan:
-			return stateNum > c.valueNum, nil
+			return valNum > c.valueNum, nil
 		case compareGreaterThanOrEqual:
-			return stateNum >= c.valueNum, nil
+			return valNum >= c.valueNum, nil
 		default:
 			return false, errors.New("invalid number comparison, this is a bug")
 		}
@@ -98,10 +156,10 @@ func (c *haCondition) Evaluate(stateStr string) (bool, error) {
 
 	switch c.comparison {
 	case compareEquals:
-		return stateStr == c.valueStr, nil
+		return val == c.valueRaw, nil
 	case compareNotEquals:
-		return stateStr != c.valueStr, nil
+		return val != c.valueRaw, nil
 	default:
-		return false, errors.New("invalid string comparison, this is a bug")
+		return false, errors.New("invalid generic comparison, this is a bug")
 	}
 }

@@ -7,15 +7,25 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type haConditionalIcons struct {
+type haConditionOverride struct {
 	Condition haCondition `yaml:"condition"`
-	File      string      `yaml:"file"`
+	Icon      string      `yaml:"icon"`
+
+	Domain        string                  `yaml:"domain"`
+	ServiceName   string                  `yaml:"service_name"`
+	ServiceData   map[string]interface{}  `yaml:"service_data"`
+	ServiceTarget *haws.CallServiceTarget `yaml:"service_target"`
 }
 
 type haEntityAction struct {
 	haEntityActionBase
 
-	Icons []haConditionalIcons `yaml:"icons"`
+	Conditions []*haConditionOverride `yaml:"conditions"`
+
+	currentDomain        string
+	currentServiceName   string
+	currentServiceData   map[string]interface{}
+	currentServiceTarget *haws.CallServiceTarget
 }
 
 func (a *haEntityAction) New() action.Action {
@@ -23,25 +33,60 @@ func (a *haEntityAction) New() action.Action {
 }
 
 func (a *haEntityAction) OnState(entityID string, state haws.State) error {
-	foundIcon := ""
 
-	for _, icon := range a.Icons {
-		match, err := icon.Condition.Evaluate(state.State)
+	var currentMatch *haConditionOverride
+	for _, cond := range a.Conditions {
+		match, err := cond.Condition.Evaluate(&state)
 		if err != nil {
 			return err
 		}
 
 		if match {
-			foundIcon = icon.File
+			currentMatch = cond
 			break
 		}
+	}
+
+	foundIcon := ""
+	foundDomain := ""
+	foundServiceName := ""
+	var foundServiceData map[string]interface{}
+	var foundServiceTarget *haws.CallServiceTarget
+
+	if currentMatch != nil {
+		foundIcon = currentMatch.Icon
+		foundDomain = currentMatch.Domain
+		foundServiceName = currentMatch.ServiceName
+		foundServiceData = currentMatch.ServiceData
+		foundServiceTarget = currentMatch.ServiceTarget
 	}
 
 	if foundIcon == "" {
 		foundIcon = a.Icon
 	}
 
+	if foundDomain == "" {
+		foundDomain = a.Domain
+	}
+
+	if foundServiceName == "" {
+		foundServiceName = a.ServiceName
+	}
+
+	if foundServiceData == nil {
+		foundServiceData = a.ServiceData
+	}
+
+	if foundServiceTarget == nil {
+		foundServiceTarget = a.ServiceTarget
+	}
+
 	a.currentIcon = foundIcon
+	a.currentDomain = foundDomain
+	a.currentServiceName = foundServiceName
+	a.currentServiceData = foundServiceData
+	a.currentServiceTarget = foundServiceTarget
+
 	return nil
 }
 
@@ -56,8 +101,8 @@ func (a *haEntityAction) ApplyConfig(config *yaml.Node, imageHelper controller.I
 		return err
 	}
 
-	if a.Icons == nil {
-		a.Icons = make([]haConditionalIcons, 0)
+	if a.Conditions == nil {
+		a.Conditions = make([]*haConditionOverride, 0)
 	}
 
 	a.instance.RegisterStateReceiver(a, a.Entity)
@@ -67,4 +112,11 @@ func (a *haEntityAction) ApplyConfig(config *yaml.Node, imageHelper controller.I
 
 func (a *haEntityAction) Name() string {
 	return "homeassistant_entity"
+}
+
+func (a *haEntityAction) Run(pressed bool) error {
+	if !pressed {
+		return nil
+	}
+	return a.instance.client.CallService(a.currentDomain, a.currentServiceName, a.currentServiceData, a.currentServiceTarget)
 }
