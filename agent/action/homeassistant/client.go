@@ -23,7 +23,7 @@ type haInstance struct {
 	client *haws.Client
 
 	stateReceiverMap map[string][]haStateReceiver
-	stateLock        sync.Mutex
+	stateLock        *sync.Mutex
 	states           map[string]haws.State
 }
 
@@ -38,6 +38,7 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 	if !ok {
 		instance = &haInstance{
 			stateReceiverMap: make(map[string][]haStateReceiver),
+			stateLock:        &sync.Mutex{},
 			states:           make(map[string]haws.State),
 		}
 

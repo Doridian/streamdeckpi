@@ -14,20 +14,20 @@ var errStopNone = errors.New("no error")
 type controllerImpl struct {
 	pageStack []*page
 	pageTop   *page
-	pageWait  sync.Mutex
+	pageWait  *sync.Mutex
 
 	lastRenderedPage *page
 	renderOkState    uint64
 
 	running        bool
-	runWait        sync.WaitGroup
+	runWait        *sync.WaitGroup
 	runError       error
-	runControlWait sync.Mutex
+	runControlWait *sync.Mutex
 
 	dev *streamdeck.Device
 
 	pageCache     map[string]*page
-	pageCacheLock sync.Mutex
+	pageCacheLock *sync.Mutex
 
 	imageHelper controller.ImageHelper
 }
@@ -38,6 +38,11 @@ func NewController(dev *streamdeck.Device) (controller.Controller, error) {
 		pageTop:   nil,
 		dev:       dev,
 		running:   false,
+
+		pageWait:       &sync.Mutex{},
+		runWait:        &sync.WaitGroup{},
+		runControlWait: &sync.Mutex{},
+		pageCacheLock:  &sync.Mutex{},
 	}
 
 	var err error

@@ -17,10 +17,10 @@ type imageHelper struct {
 	controller *controllerImpl
 
 	imageCache     map[string]*streamdeck.ImageData
-	imageCacheLock sync.RWMutex
+	imageCacheLock *sync.RWMutex
 
 	rawImageCache     map[string]image.Image
-	rawImageCacheLock sync.RWMutex
+	rawImageCacheLock *sync.RWMutex
 
 	blankImage *streamdeck.ImageData
 }
@@ -34,10 +34,14 @@ func newImageHelper(ctrl *controllerImpl) (controller.ImageHelper, error) {
 	}
 
 	return &imageHelper{
-		controller:    ctrl,
-		blankImage:    convImg,
-		imageCache:    make(map[string]*streamdeck.ImageData),
-		rawImageCache: make(map[string]image.Image),
+		controller: ctrl,
+		blankImage: convImg,
+
+		imageCache:     make(map[string]*streamdeck.ImageData),
+		imageCacheLock: &sync.RWMutex{},
+
+		rawImageCache:     make(map[string]image.Image),
+		rawImageCacheLock: &sync.RWMutex{},
 	}, nil
 }
 

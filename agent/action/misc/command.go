@@ -31,11 +31,13 @@ type command struct {
 
 	running   bool
 	runSymbol *emptyStruct
-	runLock   sync.Mutex
+	runLock   *sync.Mutex
 }
 
 func (a *command) New() action.Action {
-	return &command{}
+	return &command{
+		runLock: &sync.Mutex{},
+	}
 }
 
 func (a *command) setCurrentIcon(icon string) {
