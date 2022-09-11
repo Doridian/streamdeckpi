@@ -3,7 +3,6 @@ package homeassistant
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/Doridian/go-haws"
 )
@@ -82,42 +81,12 @@ func (c *haCondition) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	c.valueNum, ok = v.Value.(float64)
+	c.valueNum, ok = coerceNumber(v.Value)
 	if ok {
-		return nil
-	}
-
-	valInt, ok := v.Value.(int)
-	if ok {
-		c.valueNum = float64(valInt)
 		return nil
 	}
 
 	return errors.New("attempt to create number comparison with non-number")
-}
-
-func coerceNumber(val interface{}) (float64, bool) {
-	valNum, ok := val.(float64)
-	if ok {
-		return valNum, true
-	}
-
-	valInt, ok := val.(int)
-	if ok {
-		return float64(valInt), true
-	}
-
-	valStr, ok := val.(string)
-	if !ok {
-		return 0, false
-	}
-
-	valNum, err := strconv.ParseFloat(valStr, 64)
-	if err == nil {
-		return 0, false
-	}
-
-	return valNum, true
 }
 
 func (c *haCondition) Evaluate(state *haws.State) (bool, error) {

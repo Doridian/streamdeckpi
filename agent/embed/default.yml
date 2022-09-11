@@ -6,7 +6,8 @@ actions:
     entity: light.tv_left_light
     service_name: toggle
 
-    icon: light.png
+    on_icon: light_on.png
+    off_icon: light_off.png
 
 - button: [0,1]
   name: homeassistant_entity

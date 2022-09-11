@@ -15,10 +15,14 @@ import (
 type haLightAction struct {
 	haEntityActionBase
 
-	baseImage  image.Image
-	renderIcon *streamdeck.ImageData
-	doRender   bool
-	lightColor color.Color
+	OnIcon  string `yaml:"on_icon"`
+	OffIcon string `yaml:"off_icon"`
+
+	baseImageOn  image.Image
+	baseImageOff image.Image
+	doRender     bool
+	lightColor   color.Color
+	lightOn      bool
 }
 
 func (a *haLightAction) New() action.Action {
@@ -26,17 +30,35 @@ func (a *haLightAction) New() action.Action {
 }
 
 func convColorElement(elem interface{}, brightness float64) uint8 {
-	col := elem.(float64)
+	col, ok := coerceNumber(elem)
+	if !ok {
+		return 255
+	}
 	col *= (brightness / 255.0)
 	return uint8(col)
 }
 
 func (a *haLightAction) OnState(entityID string, state haws.State) error {
 	if state.State == "off" {
+		a.lightOn = false
+
 		a.lightColor = color.Black
 	} else {
-		lightColorRGB := state.Attributes["rgb_color"].([]interface{})
-		brightness := state.Attributes["brightness"].(float64)
+		a.lightOn = true
+
+		lightColorRGB, ok := state.Attributes["rgb_color"].([]interface{})
+		if !ok {
+			lightColorRGB = []interface{}{
+				255,
+				255,
+				255,
+			}
+		}
+
+		brightness, ok := coerceNumber(state.Attributes["brightness"])
+		if !ok {
+			brightness = 255
+		}
 
 		a.lightColor = color.NRGBA{
 			R: convColorElement(lightColorRGB[0], brightness),
@@ -65,12 +87,12 @@ func (a *haLightAction) ApplyConfig(config *yaml.Node, imageHelper controller.Im
 		a.Domain = "light"
 	}
 
-	baseImage, err := imageHelper.LoadNoConvert(a.Icon)
+	a.baseImageOn, err = imageHelper.LoadNoConvert(a.OnIcon)
 	if err != nil {
 		return err
 	}
-	a.baseImage = baseImage
-	a.renderIcon, err = imageHelper.Convert(a.baseImage)
+
+	a.baseImageOff, err = imageHelper.LoadNoConvert(a.OffIcon)
 	if err != nil {
 		return err
 	}
@@ -89,15 +111,20 @@ func (a *haLightAction) Render(force bool) (*streamdeck.ImageData, error) {
 		return nil, nil
 	}
 
-	img := image.NewRGBA(a.baseImage.Bounds())
+	var baseImage image.Image
+	if a.lightOn {
+		baseImage = a.baseImageOn
+	} else {
+		baseImage = a.baseImageOff
+	}
 
+	img := image.NewRGBA(a.baseImageOn.Bounds())
 	draw.Draw(img, img.Rect, image.NewUniform(a.lightColor), image.Point{}, draw.Src)
-	draw.Draw(img, img.Rect, a.baseImage, image.Point{}, draw.Over)
+	draw.Draw(img, img.Rect, baseImage, image.Point{}, draw.Over)
 
 	convImg, err := a.ImageHelper.Convert(img)
 	if err == nil {
 		a.doRender = false
 	}
-
 	return convImg, err
 }

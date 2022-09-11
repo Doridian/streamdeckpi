@@ -2,6 +2,7 @@ package homeassistant
 
 import (
 	"github.com/Doridian/go-haws"
+	"github.com/Doridian/go-streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/action"
 	"github.com/Doridian/streamdeckpi/agent/controller"
 	"gopkg.in/yaml.v3"
@@ -19,6 +20,7 @@ type haConditionOverride struct {
 
 type haEntityAction struct {
 	haEntityActionBase
+	Icon string `yaml:"icon"`
 
 	Conditions []*haConditionOverride `yaml:"conditions"`
 
@@ -26,6 +28,9 @@ type haEntityAction struct {
 	currentServiceName   string
 	currentServiceData   map[string]interface{}
 	currentServiceTarget *haws.CallServiceTarget
+
+	currentIcon      string
+	lastRenderedIcon string
 }
 
 func (a *haEntityAction) New() action.Action {
@@ -119,4 +124,13 @@ func (a *haEntityAction) Run(pressed bool) error {
 		return nil
 	}
 	return a.instance.client.CallService(a.currentDomain, a.currentServiceName, a.currentServiceData, a.currentServiceTarget)
+}
+
+func (a *haEntityAction) Render(force bool) (*streamdeck.ImageData, error) {
+	if a.currentIcon == a.lastRenderedIcon && !force {
+		return nil, nil
+	}
+
+	a.lastRenderedIcon = a.currentIcon
+	return a.ImageHelper.Load(a.lastRenderedIcon)
 }

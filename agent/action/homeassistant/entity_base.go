@@ -2,7 +2,6 @@ package homeassistant
 
 import (
 	"github.com/Doridian/go-haws"
-	"github.com/Doridian/go-streamdeck"
 	"github.com/Doridian/streamdeckpi/agent/controller"
 	"gopkg.in/yaml.v3"
 )
@@ -18,10 +17,6 @@ type haEntityActionBase struct {
 	ServiceTarget *haws.CallServiceTarget `yaml:"service_target"`
 
 	// TODO: Error icon and timeout
-	Icon string `yaml:"icon"`
-
-	currentIcon      string
-	lastRenderedIcon string
 }
 
 func (a *haEntityActionBase) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
@@ -35,7 +30,6 @@ func (a *haEntityActionBase) ApplyConfig(config *yaml.Node, imageHelper controll
 		return err
 	}
 
-	a.currentIcon = a.Icon
 	if a.ServiceTarget == nil {
 		a.ServiceTarget = &haws.CallServiceTarget{
 			EntityID: []string{a.Entity},
@@ -43,15 +37,6 @@ func (a *haEntityActionBase) ApplyConfig(config *yaml.Node, imageHelper controll
 	}
 
 	return nil
-}
-
-func (a *haEntityActionBase) Render(force bool) (*streamdeck.ImageData, error) {
-	if a.currentIcon == a.lastRenderedIcon && !force {
-		return nil, nil
-	}
-
-	a.lastRenderedIcon = a.currentIcon
-	return a.ImageHelper.Load(a.lastRenderedIcon)
 }
 
 func (a *haEntityActionBase) Run(pressed bool) error {
