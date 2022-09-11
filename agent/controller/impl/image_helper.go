@@ -18,7 +18,11 @@ type imageHelper struct {
 
 	imageCache     map[string]*streamdeck.ImageData
 	imageCacheLock sync.RWMutex
-	blankImage     *streamdeck.ImageData
+
+	rawImageCache     map[string]image.Image
+	rawImageCacheLock sync.RWMutex
+
+	blankImage *streamdeck.ImageData
 }
 
 func newImageHelper(ctrl *controllerImpl) (controller.ImageHelper, error) {
@@ -30,9 +34,10 @@ func newImageHelper(ctrl *controllerImpl) (controller.ImageHelper, error) {
 	}
 
 	return &imageHelper{
-		controller: ctrl,
-		blankImage: convImg,
-		imageCache: make(map[string]*streamdeck.ImageData),
+		controller:    ctrl,
+		blankImage:    convImg,
+		imageCache:    make(map[string]*streamdeck.ImageData),
+		rawImageCache: make(map[string]image.Image),
 	}, nil
 }
 
@@ -41,18 +46,51 @@ func (l *imageHelper) GetBlankImage() *streamdeck.ImageData {
 }
 
 func (l *imageHelper) LoadNoConvert(pathSub string) (image.Image, error) {
+	pathSub, err := l.controller.CleanPath(pathSub)
+	if err != nil {
+		return nil, err
+	}
+
+	l.rawImageCacheLock.RLock()
+	img, ok := l.rawImageCache[pathSub]
+	l.rawImageCacheLock.RUnlock()
+	if ok {
+		return img, nil
+	}
+
+	// Re-try fetching here, just in case another run just created the cache entry
+	// as we could't hold a lock for a little while
+	l.rawImageCacheLock.Lock()
+	defer l.rawImageCacheLock.Unlock()
+
+	img, ok = l.rawImageCache[pathSub]
+	if ok {
+		return img, nil
+	}
+
+	img, err = l.loadNoConvert(pathSub)
+	if err != nil {
+		return nil, err
+	}
+
+	l.rawImageCache[pathSub] = img
+
+	return img, nil
+}
+
+func (l *imageHelper) loadNoConvert(pathSub string) (image.Image, error) {
 	reader, err := l.controller.ResolveFile(pathSub)
 	if err != nil {
 		return nil, fmt.Errorf("error resolving image: %w", err)
 	}
 	defer reader.Close()
 
-	goImage, _, err := image.Decode(reader)
+	img, _, err := image.Decode(reader)
 	if err != nil {
 		return nil, fmt.Errorf("error decoding image: %w", err)
 	}
 
-	return goImage, nil
+	return img, nil
 }
 
 func (l *imageHelper) Convert(img image.Image) (*streamdeck.ImageData, error) {
@@ -72,7 +110,17 @@ func (l *imageHelper) Load(pathSub string) (*streamdeck.ImageData, error) {
 		return img, nil
 	}
 
-	goImage, err := l.LoadNoConvert(pathSub)
+	l.imageCacheLock.Lock()
+	defer l.imageCacheLock.Unlock()
+
+	// Re-try fetching here, just in case another run just created the cache entry
+	// as we could't hold a lock for a little while
+	img, ok = l.imageCache[pathSub]
+	if ok {
+		return img, nil
+	}
+
+	goImage, err := l.loadNoConvert(pathSub)
 	if err != nil {
 		return nil, err
 	}
@@ -82,9 +130,7 @@ func (l *imageHelper) Load(pathSub string) (*streamdeck.ImageData, error) {
 		return nil, fmt.Errorf("error converting image: %w", err)
 	}
 
-	l.imageCacheLock.Lock()
 	l.imageCache[pathSub] = convImg
-	l.imageCacheLock.Unlock()
 
 	return convImg, nil
 }
