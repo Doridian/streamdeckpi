@@ -22,11 +22,13 @@ type imageHelper struct {
 	rawImageCache     map[string]image.Image
 	rawImageCacheLock *sync.RWMutex
 
-	blankImage *streamdeck.ImageData
+	blankImage  *streamdeck.ImageData
+	imageBounds image.Rectangle
 }
 
 func newImageHelper(ctrl *controllerImpl) (controller.ImageHelper, error) {
-	img := image.NewRGBA(image.Rect(0, 0, int(ctrl.dev.Pixels), int(ctrl.dev.Pixels)))
+	bounds := image.Rect(0, 0, int(ctrl.dev.Pixels), int(ctrl.dev.Pixels))
+	img := image.NewRGBA(bounds)
 
 	convImg, err := ctrl.dev.ConvertImage(img)
 	if err != nil {
@@ -35,7 +37,9 @@ func newImageHelper(ctrl *controllerImpl) (controller.ImageHelper, error) {
 
 	return &imageHelper{
 		controller: ctrl,
-		blankImage: convImg,
+
+		blankImage:  convImg,
+		imageBounds: bounds,
 
 		imageCache:     make(map[string]*streamdeck.ImageData),
 		imageCacheLock: &sync.RWMutex{},
@@ -47,6 +51,10 @@ func newImageHelper(ctrl *controllerImpl) (controller.ImageHelper, error) {
 
 func (l *imageHelper) GetBlankImage() *streamdeck.ImageData {
 	return l.blankImage
+}
+
+func (l *imageHelper) GetImageBounds() image.Rectangle {
+	return l.imageBounds
 }
 
 func (l *imageHelper) LoadNoConvert(pathSub string) (image.Image, error) {

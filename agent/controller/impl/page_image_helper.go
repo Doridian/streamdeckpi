@@ -32,6 +32,10 @@ func (l *pageImageHelper) GetBlankImage() *streamdeck.ImageData {
 	return l.parent.GetBlankImage()
 }
 
+func (l *pageImageHelper) GetImageBounds() image.Rectangle {
+	return l.parent.GetImageBounds()
+}
+
 func (l *pageImageHelper) LoadNoConvert(pathSub string) (image.Image, error) {
 	return l.parent.LoadNoConvert(path.Join(l.path, pathSub))
 }

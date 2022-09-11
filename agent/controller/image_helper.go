@@ -13,4 +13,5 @@ type ImageHelper interface {
 	Convert(img image.Image) (*streamdeck.ImageData, error)
 
 	GetBlankImage() *streamdeck.ImageData
+	GetImageBounds() image.Rectangle
 }
