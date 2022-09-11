@@ -17,6 +17,7 @@ type controllerImpl struct {
 	pageWait  sync.Mutex
 
 	lastRenderedPage *page
+	renderOkState    uint64
 
 	running        bool
 	runWait        sync.WaitGroup

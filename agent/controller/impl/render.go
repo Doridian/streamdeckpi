@@ -17,21 +17,26 @@ func (c *controllerImpl) renderAction(actionObj action.Action, force bool) (*str
 	return actionObj.Render(force)
 }
 
-func (c *controllerImpl) render(force bool) (hadErrors bool) {
+func (c *controllerImpl) render() {
 	currentPage := c.pageTop
 	if currentPage != c.lastRenderedPage {
-		force = true
+		c.renderOkState = 0
 	}
 	c.lastRenderedPage = currentPage
 
 	var img *streamdeck.ImageData
-	var err error
+
+	var renderErr error
+	var setErr error
 
 	for i, actionObj := range c.pageTop.actions {
-		img, err = c.renderAction(actionObj, force)
-		if err != nil {
-			log.Printf("Error rendering action: %v", err)
-			hadErrors = true
+		renderOkMask := uint64(0b1) << i
+
+		force := c.renderOkState&renderOkMask == 0
+
+		img, renderErr = c.renderAction(actionObj, force)
+		if renderErr != nil {
+			log.Printf("Error rendering action: %v", renderErr)
 			img = nil
 		}
 
@@ -40,17 +45,18 @@ func (c *controllerImpl) render(force bool) (hadErrors bool) {
 		}
 
 		if img == nil {
-			continue
+			setErr = nil
+		} else {
+			setErr = c.dev.SetConvertedImage(uint8(i), img)
+			if setErr != nil {
+				log.Printf("Error setting image: %v", setErr)
+			}
 		}
 
-		err = c.dev.SetConvertedImage(uint8(i), img)
-		if err != nil {
-			log.Printf("Error setting image: %v", err)
-			hadErrors = true
+		if renderErr == nil && setErr == nil {
+			c.renderOkState |= renderOkMask
 		}
 	}
-
-	return
 }
 
 func (c *controllerImpl) renderLoop() {
@@ -58,9 +64,8 @@ func (c *controllerImpl) renderLoop() {
 
 	frameWait := time.Duration(16) * time.Millisecond
 
-	hadErrors := false
 	for c.running {
-		hadErrors = c.render(hadErrors)
+		c.render()
 		time.Sleep(frameWait)
 	}
 
