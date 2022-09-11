@@ -18,9 +18,6 @@ type haLightAction struct {
 	OnIcon  string `yaml:"on_icon"`
 	OffIcon string `yaml:"off_icon"`
 
-	baseImageOn image.Image
-	imageOff    *streamdeck.ImageData
-
 	doRender bool
 
 	lightColor color.Color
@@ -89,16 +86,6 @@ func (a *haLightAction) ApplyConfig(config *yaml.Node, imageHelper controller.Im
 		a.Domain = "light"
 	}
 
-	a.baseImageOn, err = imageHelper.LoadNoConvert(a.OnIcon)
-	if err != nil {
-		return err
-	}
-
-	a.imageOff, err = imageHelper.Load(a.OffIcon)
-	if err != nil {
-		return err
-	}
-
 	a.instance.RegisterStateReceiver(a, a.Entity)
 
 	return nil
@@ -116,12 +103,17 @@ func (a *haLightAction) Render(force bool) (*streamdeck.ImageData, error) {
 	var err error
 	var convImg *streamdeck.ImageData
 	if a.lightOn {
-		img := image.NewRGBA(a.baseImageOn.Bounds())
+		var baseImage image.Image
+		baseImage, err = a.ImageHelper.LoadNoConvert(a.OnIcon)
+		if err != nil {
+			return nil, err
+		}
+		img := image.NewRGBA(baseImage.Bounds())
 		draw.Draw(img, img.Rect, image.NewUniform(a.lightColor), image.Point{}, draw.Src)
-		draw.Draw(img, img.Rect, a.baseImageOn, image.Point{}, draw.Over)
+		draw.Draw(img, img.Rect, baseImage, image.Point{}, draw.Over)
 		convImg, err = a.ImageHelper.Convert(img)
 	} else {
-		convImg = a.imageOff
+		convImg, err = a.ImageHelper.Load(a.OffIcon)
 	}
 
 	if err == nil {
