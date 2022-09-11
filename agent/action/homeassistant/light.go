@@ -18,11 +18,13 @@ type haLightAction struct {
 	OnIcon  string `yaml:"on_icon"`
 	OffIcon string `yaml:"off_icon"`
 
-	baseImageOn  image.Image
-	baseImageOff image.Image
-	doRender     bool
-	lightColor   color.Color
-	lightOn      bool
+	baseImageOn image.Image
+	imageOff    *streamdeck.ImageData
+
+	doRender bool
+
+	lightColor color.Color
+	lightOn    bool
 }
 
 func (a *haLightAction) New() action.Action {
@@ -92,7 +94,7 @@ func (a *haLightAction) ApplyConfig(config *yaml.Node, imageHelper controller.Im
 		return err
 	}
 
-	a.baseImageOff, err = imageHelper.LoadNoConvert(a.OffIcon)
+	a.imageOff, err = imageHelper.Load(a.OffIcon)
 	if err != nil {
 		return err
 	}
@@ -111,18 +113,17 @@ func (a *haLightAction) Render(force bool) (*streamdeck.ImageData, error) {
 		return nil, nil
 	}
 
-	var baseImage image.Image
+	var err error
+	var convImg *streamdeck.ImageData
 	if a.lightOn {
-		baseImage = a.baseImageOn
+		img := image.NewRGBA(a.baseImageOn.Bounds())
+		draw.Draw(img, img.Rect, image.NewUniform(a.lightColor), image.Point{}, draw.Src)
+		draw.Draw(img, img.Rect, a.baseImageOn, image.Point{}, draw.Over)
+		convImg, err = a.ImageHelper.Convert(img)
 	} else {
-		baseImage = a.baseImageOff
+		convImg = a.imageOff
 	}
 
-	img := image.NewRGBA(a.baseImageOn.Bounds())
-	draw.Draw(img, img.Rect, image.NewUniform(a.lightColor), image.Point{}, draw.Src)
-	draw.Draw(img, img.Rect, baseImage, image.Point{}, draw.Over)
-
-	convImg, err := a.ImageHelper.Convert(img)
 	if err == nil {
 		a.doRender = false
 	}
