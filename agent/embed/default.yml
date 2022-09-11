@@ -6,8 +6,8 @@ actions:
     entity: light.tv_left_light
     service_name: toggle
 
-    on_icon: light_on.png
-    off_icon: light_off.png
+    on_icon: icons/light_on.png
+    off_icon: icons/light_off.png
 
 - button: [0,1]
   name: homeassistant_entity
@@ -16,28 +16,33 @@ actions:
     entity: fan.corner_ceiling_fan
     service_name: set_percentage
 
-    icon: 0.png
+    icon: icons/fan.png
     service_data:
       percentage: 30
 
     conditions:
-    - icon: 3.png
+    - icon: icons/fan_3.png
       service_data:
         percentage: 0
       condition:
         src: percentage
         comparison: gt
         value: 70
-    - icon: 2.png
+    - icon: icons/fan_2.png
       service_data:
         percentage: 100
       condition:
         src: percentage
         comparison: gt
         value: 40
-    - icon: 1.png
+    - icon: icons/fan_1.png
       service_data:
         percentage: 50
+      condition:
+        src: percentage
+        comparison: gt
+        value: 0
+    - icon: icons/fan_0.png
       condition:
         src: percentage
         comparison: gt
