@@ -127,10 +127,11 @@ func (a *haEntityAction) Run(pressed bool) error {
 }
 
 func (a *haEntityAction) Render(force bool) (*streamdeck.ImageData, error) {
-	if a.currentIcon == a.lastRenderedIcon && !force {
+	toRender := a.currentIcon
+	if toRender == a.lastRenderedIcon && !force {
 		return nil, nil
 	}
 
-	a.lastRenderedIcon = a.currentIcon
-	return a.ImageHelper.Load(a.lastRenderedIcon)
+	a.lastRenderedIcon = toRender
+	return a.ImageHelper.Load(toRender)
 }
