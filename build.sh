@@ -7,7 +7,7 @@ export GOARM=6
 
 ~/go/bin/gokr-packer \
   -tls=self-signed \
-  -kernel_package=github.com/Doridian/kernel-rpi-os-32/dist \
+  -kernel_package=github.com/gokrazy-community/kernel-rpi-os-32/dist \
   -hostname streamdeckpi \
   -serial_console serial0,115200 \
   -overwrite /dev/disk4 \
