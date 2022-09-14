@@ -9,7 +9,7 @@ then
   UPARG="-overwrite=$1"
 fi
 
-~/go/bin/gokr-packer \
+gokr-packer \
   -tls=self-signed \
   -kernel_package=github.com/gokrazy-community/kernel-rpi-os-32/dist \
   -hostname=streamdeckpi \
