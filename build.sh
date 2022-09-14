@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 export GOARCH=arm
 export GOARM=6
 
