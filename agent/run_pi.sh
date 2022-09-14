@@ -4,7 +4,7 @@ export GOARM=6
 export GOARCH=arm
 export GOOS=linux
 
-gok run --instance streamdeckpi --project ./cmd/agent
+cd ./cmd/agent && gok run --instance streamdeckpi
 
 unset GOARM
 unset GOARCH
