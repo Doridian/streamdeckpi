@@ -6,7 +6,7 @@ require (
 	github.com/Doridian/go-haws v0.3.1
 	github.com/Doridian/go-streamdeck v1.2.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
-	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69
+	golang.org/x/image v0.0.0-20221017200508-ffcb3fe7d1bf
 	gopkg.in/yaml.v3 v3.0.1
 )
 
