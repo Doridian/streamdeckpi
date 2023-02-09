@@ -4,6 +4,8 @@ github.com/Doridian/go-streamdeck v1.2.0 h1:bQsvAE303kycQhd15L8Y3VSl4WyRAp4EVwlD
 github.com/Doridian/go-streamdeck v1.2.0/go.mod h1:mT1rKYl1d0w3JFI/zGhND8RcRZ3/pPGME9YR+1Y2Bh0=
 github.com/Doridian/go-streamdeck v1.3.0 h1:cxZwllONnQ/yOkJb7AxiXKawqBq5LFBEVZeXLO+j35s=
 github.com/Doridian/go-streamdeck v1.3.0/go.mod h1:nCgjsJaxz9zpBFXySiCKqiorIJgRc9Vl/RmtbhGEkSk=
+github.com/Doridian/go-streamdeck v1.3.1 h1:fPKBdJFitZ2advzkbT3ne2vCi3+rnN/M2hk2P32soo0=
+github.com/Doridian/go-streamdeck v1.3.1/go.mod h1:HeNIhnZANaPg/UYxdkwz48awypHj9m/Upqu3mezneso=
 github.com/KarpelesLab/hid v0.1.0 h1:TQodVh83+piiiJbuoy8d1w2DFjkI3KS/8Efj0V05ur0=
 github.com/KarpelesLab/hid v0.1.0/go.mod h1:AQmidlnvRgFwFyHsiQdtCnqBYJzruab7YiHOSIzRgMI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
