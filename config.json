@@ -13,12 +13,17 @@
                 "-authorized_keys=/etc/breakglass.authorized_keys"
             ],
             "ExtraFilePaths": {
-                "/etc/breakglass.authorized_keys": "/Users/doridian/gokrazy/streamdeckpi/breakglass.authorized_keys"
+                "/etc/breakglass.authorized_keys": "breakglass.authorized_keys"
             }
         },
         "github.com/gokrazy/gokrazy/cmd/randomd": {
             "ExtraFileContents": {
                 "/etc/machine-id": "e10cfa5c964443e9b59fcc5100705f37\n"
+            }
+        },
+        "github.com/gokrazy/wifi": {
+            "ExtraFilePaths": {
+                "/etc/wifi.json": "wifi.json"
             }
         }
     },

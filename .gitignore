@@ -2,7 +2,7 @@
 
 /builddir
 
-/extrafiles/github.com/gokrazy/wifi/etc/wifi.json
+/wifi.json
 
 /agent/agent
 /agent/embed
