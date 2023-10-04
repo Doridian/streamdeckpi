@@ -1,0 +1,5 @@
+# This authorized_keys(5) file allows access from keys on capefox
+
+# /Users/doridian/.ssh/id_ed25519.pub
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFIHbTDeNdBFAyl950zQd8s5do5NDZbemH3NP9jat2kY
+

@@ -1,0 +1,26 @@
+{
+    "Hostname": "streamdeckpi",
+    "Packages": [
+        "github.com/gokrazy/fbstatus",
+        "github.com/gokrazy/wifi",
+        "github.com/Doridian/streamdeckpi/agent/cmd/agent",
+        "github.com/gokrazy/serial-busybox",
+        "github.com/gokrazy/breakglass"
+    ],
+    "PackageConfig": {
+        "github.com/gokrazy/breakglass": {
+            "CommandLineFlags": [
+                "-authorized_keys=/etc/breakglass.authorized_keys"
+            ],
+            "ExtraFilePaths": {
+                "/etc/breakglass.authorized_keys": "/Users/doridian/gokrazy/streamdeckpi/breakglass.authorized_keys"
+            }
+        },
+        "github.com/gokrazy/gokrazy/cmd/randomd": {
+            "ExtraFileContents": {
+                "/etc/machine-id": "e10cfa5c964443e9b59fcc5100705f37\n"
+            }
+        }
+    },
+    "SerialConsole": "disabled"
+}
