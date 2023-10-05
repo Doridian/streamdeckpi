@@ -6,6 +6,7 @@
         "github.com/gokrazy/serial-busybox",
         "github.com/gokrazy/breakglass"
     ],
+    "KernelPackage": "github.com/Doridian/gokrazy-kernel",
     "PackageConfig": {
         "github.com/gokrazy/breakglass": {
             "CommandLineFlags": [
