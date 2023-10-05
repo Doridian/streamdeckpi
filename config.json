@@ -1,7 +1,6 @@
 {
     "Hostname": "streamdeckpi",
     "Packages": [
-        "github.com/gokrazy/fbstatus",
         "github.com/gokrazy/wifi",
         "github.com/Doridian/streamdeckpi/agent/cmd/agent",
         "github.com/gokrazy/serial-busybox",
