@@ -7,5 +7,6 @@ func init() {
 	loader.RegisterAction(&command{})
 	loader.RegisterAction(&exit{})
 	loader.RegisterAction(&reMap{})
+	loader.RegisterAction(&multi{})
 	loader.RegisterAction(&none{})
 }

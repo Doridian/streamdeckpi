@@ -38,7 +38,6 @@ func (a *haEntityAction) New() action.Action {
 }
 
 func (a *haEntityAction) OnState(entityID string, state haws.State) error {
-
 	var currentMatch *haConditionOverride
 	for _, cond := range a.Conditions {
 		match, err := cond.Condition.Evaluate(&state)
