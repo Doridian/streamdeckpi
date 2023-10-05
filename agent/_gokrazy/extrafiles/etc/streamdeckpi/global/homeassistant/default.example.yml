@@ -1,0 +1,2 @@
+url: "wss://homeassistant.foxden.network/api/websocket"
+token: "[redacted]"
