@@ -2,7 +2,7 @@
     "Hostname": "streamdeckpi",
     "Packages": [
         "github.com/gokrazy/wifi",
-        "github.com/Doridian/streamdeckpi/agent/cmd/agent",
+        "github.com/Doridian/streamdeckpi/agent",
         "github.com/gokrazy/serial-busybox",
         "github.com/gokrazy/breakglass"
     ],
