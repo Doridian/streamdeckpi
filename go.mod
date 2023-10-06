@@ -18,6 +18,7 @@ require (
 
 // Well this seems like a weird kludge, but it works to make gokrazy understand to use the local files...
 replace github.com/Doridian/streamdeckpi => ./
+replace github.com/karalabe/hid => ../karalabe-hid/
 
 // replace github.com/Doridian/go-haws => ../go-haws/
 // replace github.com/Doridian/go-streamdeck => ../go-streamdeck/

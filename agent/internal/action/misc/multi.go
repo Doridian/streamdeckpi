@@ -1,7 +1,6 @@
 package misc
 
 import (
-	"log"
 	"time"
 
 	"github.com/Doridian/go-streamdeck"
@@ -134,7 +133,6 @@ func (a *multi) checkActions() error {
 	for _, runAction := range a.runActions {
 		if runAction.matches(a.runHistory) {
 			a.runHistory = make([]*runEntry, 0)
-			log.Printf("Running action %s %v", runAction.action.Name(), runAction.action)
 			return runAction.action.Run(runAction.pressed)
 		}
 	}
