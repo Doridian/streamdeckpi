@@ -16,14 +16,6 @@ actions:
     on_icon: icons/floor_light_bottom_on.png
     off_icon: icons/floor_light_bottom_off.png
 - button: [1,0]
-  name: homeassistant_light
-  parameters:
-    domain: light
-    entity: light.hue_lightguide_bulb_1
-    service_name: toggle
-    on_icon: icons/ceiling_light_on.png
-    off_icon: icons/ceiling_light_off.png
-- button: [1,1]
   name: multi
   parameters:
     render:
