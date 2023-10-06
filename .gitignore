@@ -1,7 +1,5 @@
 .DS_Store
-
+.vscode
 /builddir
-
 /wifi.json
-
 /agent/agent

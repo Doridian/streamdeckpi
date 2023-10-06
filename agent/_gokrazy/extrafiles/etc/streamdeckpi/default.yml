@@ -1,21 +1,77 @@
 actions:
-- button: [0,0]
-  name: homeassistant_light
+- button:
+  - 0
+  - 0
+  name: multi
   parameters:
-    domain: light
-    entity: light.hue_color_lamp_1_3
-    service_name: toggle
-    on_icon: icons/floor_light_top_on.png
-    off_icon: icons/floor_light_top_off.png
-- button: [0,1]
-  name: homeassistant_light
+    render:
+      name: homeassistant_light
+      parameters:
+        domain: light
+        entity: light.hue_color_lamp_1_3
+        off_icon: icons/floor_light_top_off.png
+        on_icon: icons/floor_light_top_on.png
+    run:
+    - conditions:
+      - max: 300ms
+        min: 10ms
+        pressed: true
+      - min: 100ms
+        pressed: false
+      name: homeassistant_light
+      parameters:
+        domain: light
+        entity: light.hue_color_lamp_1_3
+        service_name: turn_on
+      pressed: true
+    - conditions:
+      - max: 1000ms
+        min: 500ms
+        pressed: true
+      name: homeassistant_light
+      parameters:
+        domain: light
+        entity: light.hue_color_lamp_1_3
+        service_name: turn_off
+      pressed: true
+- button:
+  - 0
+  - 1
+  name: multi
   parameters:
-    domain: light
-    entity: light.hue_color_candle_1_2
-    service_name: toggle
-    on_icon: icons/floor_light_bottom_on.png
-    off_icon: icons/floor_light_bottom_off.png
-- button: [1,0]
+    render:
+      name: homeassistant_light
+      parameters:
+        domain: light
+        entity: light.hue_color_candle_1_2
+        off_icon: icons/floor_light_bottom_off.png
+        on_icon: icons/floor_light_bottom_on.png
+    run:
+    - conditions:
+      - max: 300ms
+        min: 10ms
+        pressed: true
+      - min: 100ms
+        pressed: false
+      name: homeassistant_light
+      parameters:
+        domain: light
+        entity: light.hue_color_candle_1_2
+        service_name: turn_on
+      pressed: true
+    - conditions:
+      - max: 1000ms
+        min: 500ms
+        pressed: true
+      name: homeassistant_light
+      parameters:
+        domain: light
+        entity: light.hue_color_candle_1_2
+        service_name: turn_off
+      pressed: true
+- button:
+  - 1
+  - 0
   name: multi
   parameters:
     render:
@@ -23,36 +79,28 @@ actions:
       parameters:
         domain: light
         entity: light.hue_lightguide_bulb_1
-        on_icon: icons/ceiling_light_on.png
         off_icon: icons/ceiling_light_off.png
+        on_icon: icons/ceiling_light_on.png
     run:
-      - conditions:
-          - pressed: true
-            min: 10ms
-            max: 300ms
-          - pressed: false
-            min: 100ms
+    - conditions:
+      - max: 300ms
+        min: 10ms
         pressed: true
-        name: homeassistant_light
-        parameters:
-          domain: light
-          entity: light.hue_lightguide_bulb_1
-          service_name: turn_on
-      - conditions:
-          - pressed: true
-            min: 500ms
-            max: 1000ms
+      - min: 100ms
+        pressed: false
+      name: homeassistant_light
+      parameters:
+        domain: light
+        entity: light.hue_lightguide_bulb_1
+        service_name: turn_on
+      pressed: true
+    - conditions:
+      - max: 1000ms
+        min: 500ms
         pressed: true
-        name: homeassistant_light
-        parameters:
-          domain: light
-          entity: light.hue_lightguide_bulb_1
-          service_name: turn_off
-
-- button: [4,0]
-  name: homeassistant_string
-  parameters:
-    domain: sensor
-    entity: sensor.dori_office_particulate_matter_2_5um_concentration
-    service_name: toggle
-    icon: icons/blank.png
+      name: homeassistant_light
+      parameters:
+        domain: light
+        entity: light.hue_lightguide_bulb_1
+        service_name: turn_off
+      pressed: true
