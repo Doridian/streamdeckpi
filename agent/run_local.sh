@@ -2,6 +2,7 @@
 set -e
 
 echo 'Building...'
+./templategen.py
 rm -f ./agent
 go build -o ./agent ./
 echo 'Running...'
