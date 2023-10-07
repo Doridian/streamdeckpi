@@ -12,11 +12,34 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type haStringConditionOverride struct {
+	Condition haCondition `yaml:"condition"`
+	Icon      *string     `yaml:"icon"`
+
+	Color []uint8 `yaml:"color"`
+	X     *int    `yaml:"x"`
+	Y     *int    `yaml:"y"`
+	Size  float64 `yaml:"size"`
+	Font  string  `yaml:"font"`
+}
+
 type haStringAction struct {
 	haEntityActionBase
 
-	Icon string `yaml:"icon"`
+	Icon       string                       `yaml:"icon"`
+	Conditions []*haStringConditionOverride `yaml:"conditions"`
+	Color      []uint8                      `yaml:"color"`
+	X          int                          `yaml:"x"`
+	Y          int                          `yaml:"y"`
+	Size       float64                      `yaml:"size"`
+	Font       string                       `yaml:"font"`
 
+	useFont  string
+	useColor color.RGBA
+	useX     int
+	useY     int
+	useSize  float64
+	useIcon  string
 	state    string
 	doRender bool
 }
@@ -26,6 +49,64 @@ func (a *haStringAction) New() action.Action {
 }
 
 func (a *haStringAction) OnState(entityID string, state haws.State) error {
+	var currentMatch *haStringConditionOverride
+	for _, cond := range a.Conditions {
+		match, err := cond.Condition.Evaluate(&state)
+		if err != nil {
+			return err
+		}
+
+		if match {
+			currentMatch = cond
+			break
+		}
+	}
+
+	newUseIcon := a.Icon
+	newUseColor := a.Color
+	newUseX := a.X
+	newUseY := a.Y
+	newUseSize := a.Size
+	newFont := a.Font
+
+	if currentMatch != nil {
+		if currentMatch.Icon != nil {
+			newUseIcon = *currentMatch.Icon
+		}
+		if currentMatch.Color != nil {
+			newUseColor = currentMatch.Color
+		}
+		if currentMatch.X != nil {
+			newUseX = *currentMatch.X
+		}
+		if currentMatch.Y != nil {
+			newUseY = *currentMatch.Y
+		}
+		if currentMatch.Size != 0 {
+			newUseSize = currentMatch.Size
+		}
+		if currentMatch.Font != "" {
+			newFont = currentMatch.Font
+		}
+	}
+
+	if newFont == "" {
+		newFont = "font.ttf"
+	}
+	if newUseSize <= 0 {
+		newUseSize = 48
+	}
+	if newUseColor == nil {
+		newUseColor = []uint8{255, 255, 255}
+	}
+
+	a.useColor = color.RGBA{newUseColor[0], newUseColor[1], newUseColor[2], 255}
+	a.useX = newUseX
+	a.useY = newUseY
+	a.useIcon = newUseIcon
+	a.useSize = a.Size
+	a.useFont = newFont
+
 	a.state = state.State
 	a.doRender = true
 	return nil
@@ -59,7 +140,7 @@ func (a *haStringAction) Render(force bool) (*streamdeck.ImageData, error) {
 	var err error
 	var convImg *streamdeck.ImageData
 
-	baseImage, err := a.ImageHelper.LoadNoConvert(a.Icon)
+	baseImage, err := a.ImageHelper.LoadNoConvert(a.useIcon)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +148,7 @@ func (a *haStringAction) Render(force bool) (*streamdeck.ImageData, error) {
 	img := image.NewRGBA(baseImage.Bounds())
 
 	draw.Draw(img, img.Rect, baseImage, image.Point{}, draw.Src)
-	drawCenteredText(a.Controller, img, color.RGBA{255, 255, 255, 255}, 48, 48, a.state)
+	drawCenteredText(a.Controller, img, a.useFont, a.useColor, a.useX, a.useY, float64(a.useSize), a.state)
 	convImg, err = a.ImageHelper.Convert(img)
 
 	if err == nil {

@@ -52,13 +52,18 @@ func mustLoadFont(ctrl controller.Controller, file string) *truetype.Font {
 	return font
 }
 
-var trueTypeFont *truetype.Font
+var trueTypeFonts map[string]*truetype.Font
 
-func drawCenteredText(ctrl controller.Controller, img *image.RGBA, col color.RGBA, x, y int, label string) {
-	if trueTypeFont == nil {
-		trueTypeFont = mustLoadFont(ctrl, "font.ttf")
+func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, col color.RGBA, x, y int, fontSize float64, label string) {
+	if trueTypeFonts == nil {
+		trueTypeFonts = make(map[string]*truetype.Font)
 	}
-	fontSize := 48.0
+
+	trueTypeFont := trueTypeFonts[font]
+	if trueTypeFont == nil {
+		trueTypeFont = mustLoadFont(ctrl, font)
+		trueTypeFonts[font] = trueTypeFont
+	}
 
 	point := fixed.Point26_6{X: fixed.I(x), Y: fixed.I(y)}
 
