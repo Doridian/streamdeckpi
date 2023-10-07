@@ -75,7 +75,7 @@ def make_default_page():
             "texts": [
                 {
                     "color": [255, 0, 0, 255],
-                    "size": 24,
+                    "size": 18,
                     "font": "font.ttf",
                     "x": 96/2,
                     "y": 0,
@@ -85,13 +85,13 @@ def make_default_page():
                 },
                 {
                     "color": [255, 0, 0, 255],
-                    "size": 24,
+                    "size": 18,
                     "font": "font.ttf",
                     "x": 96/2,
                     "y": 96,
                     "align": "center",
                     "vertical-align": "bottom",
-                    "text": "$STATE ppm",
+                    "text": "$STATE",
                 }
             ],
         }

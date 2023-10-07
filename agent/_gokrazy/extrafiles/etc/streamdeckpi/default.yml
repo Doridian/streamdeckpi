@@ -120,7 +120,7 @@ actions:
       - 0
       - 255
       font: font.ttf
-      size: 24
+      size: 18
       text: CO2
       vertical-align: top
       x: 48.0
@@ -132,8 +132,8 @@ actions:
       - 0
       - 255
       font: font.ttf
-      size: 24
-      text: $STATE ppm
+      size: 18
+      text: $STATE
       vertical-align: bottom
       x: 48.0
       y: 96
