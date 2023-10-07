@@ -148,6 +148,23 @@ def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
             "icon": "icons/back.png",
         }
     })
+    for i in range(0, 8):
+        actions.append({
+            "button": [i, 1],
+            "name": "homeassistant_light",
+            "parameters": {
+                "on_icon": f"icons/{icon_type}_on.png",
+                "off_icon": f"icons/{icon_type}_off.png",
+                "domain": "light",
+                "entity": entity_id,
+                "service_name": "turn_on",
+                "service_data": {
+                    "brightness": i*32,
+                },
+                "render_state": "on",
+                "render_brightness": i*32,
+            }
+        })
     PAGES[subpage_name] = {"actions":actions}
 
     action = make_light(entity_id, icon_type, pos)

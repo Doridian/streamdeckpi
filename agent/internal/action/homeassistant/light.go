@@ -18,6 +18,10 @@ type haLightAction struct {
 	OnIcon  string `yaml:"on_icon"`
 	OffIcon string `yaml:"off_icon"`
 
+	RenderState      string   `yaml:"render_state"`
+	RenderRGBColor   []int    `yaml:"render_rgb_color"`
+	RenderBrightness *float64 `yaml:"render_brightness"`
+
 	doRender bool
 
 	lightColor color.Color
@@ -38,32 +42,50 @@ func convColorElement(elem interface{}, brightness float64) uint8 {
 }
 
 func (a *haLightAction) OnState(entityID string, state haws.State) error {
-	if state.State == "off" {
+	useState := a.RenderState
+	if useState == "" {
+		useState = state.State
+	}
+
+	if useState == "off" {
 		a.lightOn = false
 
 		a.lightColor = color.Black
 	} else {
 		a.lightOn = true
 
-		lightColorRGB, ok := state.Attributes["rgb_color"].([]interface{})
-		if !ok {
-			lightColorRGB = []interface{}{
-				255,
-				255,
-				255,
-			}
-		}
-
 		brightness, ok := coerceNumber(state.Attributes["brightness"])
 		if !ok {
 			brightness = 255
 		}
 
-		a.lightColor = color.NRGBA{
-			R: convColorElement(lightColorRGB[0], brightness),
-			G: convColorElement(lightColorRGB[1], brightness),
-			B: convColorElement(lightColorRGB[2], brightness),
-			A: 255,
+		if a.RenderBrightness != nil {
+			brightness = *a.RenderBrightness
+		}
+
+		if a.RenderRGBColor != nil {
+			a.lightColor = color.NRGBA{
+				R: convColorElement(a.RenderRGBColor[0], brightness),
+				G: convColorElement(a.RenderRGBColor[1], brightness),
+				B: convColorElement(a.RenderRGBColor[2], brightness),
+				A: 255,
+			}
+		} else {
+			lightColorRGB, ok := state.Attributes["rgb_color"].([]interface{})
+			if !ok {
+				lightColorRGB = []interface{}{
+					255,
+					255,
+					255,
+				}
+			}
+
+			a.lightColor = color.NRGBA{
+				R: convColorElement(lightColorRGB[0], brightness),
+				G: convColorElement(lightColorRGB[1], brightness),
+				B: convColorElement(lightColorRGB[2], brightness),
+				A: 255,
+			}
 		}
 	}
 
