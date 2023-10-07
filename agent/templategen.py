@@ -74,7 +74,7 @@ def make_default_page():
             "icon": "icons/gauge_high.png",
             "texts": [
                 {
-                    "color": [255, 0, 0, 255],
+                    "color": [255, 255, 255, 255],
                     "size": 18,
                     "font": "font.ttf",
                     "x": 96/2,
@@ -84,7 +84,7 @@ def make_default_page():
                     "text": "CO2",
                 },
                 {
-                    "color": [255, 0, 0, 255],
+                    "color": [255, 255, 255, 255],
                     "size": 18,
                     "font": "font.ttf",
                     "x": 96/2,
