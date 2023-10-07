@@ -119,14 +119,14 @@ PAGES = {}
 
 def make_default_page():
     actions = []
-    actions.append(make_fancy_light("light.hue_color_lamp_1_3", "floor_light_top", [0, 0]))
-    actions.append(make_fancy_light("light.hue_color_candle_1_2", "floor_light_bottom", [0, 1]))
-    actions.append(make_fancy_light("light.hue_lightguide_bulb_1", "ceiling_light", [1, 0]))
+    actions.append(make_fancy_light("light.hue_color_lamp_1_3", "floor_light_top", [1, 0]))
+    actions.append(make_fancy_light("light.hue_color_candle_1_2", "floor_light_bottom", [1, 1]))
+    actions.append(make_fancy_light("light.hue_lightguide_bulb_1", "ceiling_light", [2, 0]))
 
-    actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_co2", [600, 1000, 1500], "CO2", [2, 0]))
-    actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_1_0um_concentration", [10, 50, 500], "1.0 um", [3, 0]))
-    actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_2_5um_concentration", [10, 50, 500], "2.5 um", [4, 0]))
-    actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_10_0um_concentration", [10, 50, 500], "10 um", [5, 0]))
+    actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_co2", [600, 1000, 1500], "CO2", [0, 0]))
+    actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_1_0um_concentration", [10, 50, 500], "1.0 um", [0, 1]))
+    actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_2_5um_concentration", [10, 50, 500], "2.5 um", [0, 2]))
+    actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_10_0um_concentration", [10, 50, 500], "10 um", [0, 3]))
 
     PAGES["default"] = {"actions":actions}
 
