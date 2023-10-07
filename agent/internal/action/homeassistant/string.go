@@ -14,37 +14,40 @@ import (
 
 type haStringConditionOverride struct {
 	Condition haCondition `yaml:"condition"`
-	Icon      *string     `yaml:"icon"`
+	Icon      string      `yaml:"icon"`
 
-	Color []uint8 `yaml:"color"`
-	X     *int    `yaml:"x"`
-	Y     *int    `yaml:"y"`
-	Size  float64 `yaml:"size"`
-	Font  string  `yaml:"font"`
-	Align string  `yaml:"align"`
+	Color         []uint8 `yaml:"color"`
+	X             *int    `yaml:"x"`
+	Y             *int    `yaml:"y"`
+	Size          float64 `yaml:"size"`
+	Font          string  `yaml:"font"`
+	Align         string  `yaml:"align"`
+	VerticalAlign string  `yaml:"vertical-align"`
 }
 
 type haStringAction struct {
 	haEntityActionBase
 
-	Icon       string                       `yaml:"icon"`
-	Conditions []*haStringConditionOverride `yaml:"conditions"`
-	Color      []uint8                      `yaml:"color"`
-	X          int                          `yaml:"x"`
-	Y          int                          `yaml:"y"`
-	Size       float64                      `yaml:"size"`
-	Font       string                       `yaml:"font"`
-	Align      string                       `yaml:"align"`
+	Icon          string                       `yaml:"icon"`
+	Conditions    []*haStringConditionOverride `yaml:"conditions"`
+	Color         []uint8                      `yaml:"color"`
+	X             int                          `yaml:"x"`
+	Y             int                          `yaml:"y"`
+	Size          float64                      `yaml:"size"`
+	Font          string                       `yaml:"font"`
+	Align         string                       `yaml:"align"`
+	VerticalAlign string                       `yaml:"vertical-align"`
 
-	useFont  string
-	useColor color.RGBA
-	useX     int
-	useY     int
-	useSize  float64
-	useIcon  string
-	useAlign string
-	state    string
-	doRender bool
+	useFont          string
+	useColor         color.RGBA
+	useX             int
+	useY             int
+	useSize          float64
+	useIcon          string
+	useAlign         FontAlign
+	useVerticalAlign FontAlign
+	state            string
+	doRender         bool
 }
 
 func (a *haStringAction) New() action.Action {
@@ -72,10 +75,11 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 	newUseSize := a.Size
 	newUseFont := a.Font
 	newUseAlign := a.Align
+	newUseVerticalAlign := a.VerticalAlign
 
 	if currentMatch != nil {
-		if currentMatch.Icon != nil {
-			newUseIcon = *currentMatch.Icon
+		if currentMatch.Icon != "" {
+			newUseIcon = currentMatch.Icon
 		}
 		if currentMatch.Color != nil {
 			newUseColor = currentMatch.Color
@@ -95,6 +99,9 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 		if currentMatch.Align != "" {
 			newUseAlign = currentMatch.Align
 		}
+		if currentMatch.VerticalAlign != "" {
+			newUseVerticalAlign = currentMatch.VerticalAlign
+		}
 	}
 
 	if newUseFont == "" {
@@ -106,6 +113,12 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 	if newUseColor == nil {
 		newUseColor = []uint8{255, 255, 255}
 	}
+	if newUseAlign == "" {
+		newUseAlign = "center"
+	}
+	if newUseVerticalAlign == "" {
+		newUseVerticalAlign = "middle"
+	}
 
 	a.useColor = color.RGBA{newUseColor[0], newUseColor[1], newUseColor[2], 255}
 	a.useX = newUseX
@@ -113,7 +126,22 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 	a.useIcon = newUseIcon
 	a.useSize = newUseSize
 	a.useFont = newUseFont
-	a.useAlign = newUseAlign
+	switch newUseAlign {
+	case "left":
+		a.useAlign = FontAlignLeft
+	case "center":
+		a.useAlign = FontAlignCenter
+	case "right":
+		a.useAlign = FontAlignRight
+	}
+	switch newUseVerticalAlign {
+	case "top":
+		a.useVerticalAlign = FontAlignTop
+	case "middle":
+		a.useVerticalAlign = FontAlignMiddle
+	case "bottom":
+		a.useVerticalAlign = FontAlignBottom
+	}
 
 	a.state = state.State
 	a.doRender = true
@@ -156,7 +184,7 @@ func (a *haStringAction) Render(force bool) (*streamdeck.ImageData, error) {
 	img := image.NewRGBA(baseImage.Bounds())
 
 	draw.Draw(img, img.Rect, baseImage, image.Point{}, draw.Src)
-	drawCenteredText(a.Controller, img, a.useFont, a.useColor, a.useX, a.useY, float64(a.useSize), a.state)
+	drawCenteredText(a.Controller, img, a.useFont, a.useColor, a.useX, a.useY, float64(a.useSize), a.useAlign, a.useVerticalAlign, a.state)
 	convImg, err = a.ImageHelper.Convert(img)
 
 	if err == nil {

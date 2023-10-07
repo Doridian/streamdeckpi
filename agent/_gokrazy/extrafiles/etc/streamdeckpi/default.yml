@@ -104,3 +104,20 @@ actions:
         entity: light.hue_lightguide_bulb_1
         service_name: turn_off
       pressed: true
+- button:
+  - 2
+  - 0
+  name: homeassistant_string
+  parameters:
+    align: center
+    color:
+    - 255
+    - 0
+    - 0
+    domain: sensor
+    entity: sensor.dori_office_co2
+    icon: icons/blank.png
+    size: 24
+    vertical-align: middle
+    x: 48.0
+    y: 48.0

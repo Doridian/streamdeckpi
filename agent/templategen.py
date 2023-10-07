@@ -64,6 +64,23 @@ def make_default_page():
     actions.append(make_fancy_light("light.hue_color_lamp_1_3", "floor_light_top", [0, 0]))
     actions.append(make_fancy_light("light.hue_color_candle_1_2", "floor_light_bottom", [0, 1]))
     actions.append(make_fancy_light("light.hue_lightguide_bulb_1", "ceiling_light", [1, 0]))
+
+    actions.append({
+        "button": [2, 0],
+        "name": "homeassistant_string",
+        "parameters": {
+            "color": [255, 0, 0],
+            "domain": "sensor",
+            "entity": "sensor.dori_office_co2",
+            "icon": "icons/blank.png",
+            "size": 24,
+            "x": 96/2,
+            "y": 96/2,
+            "align": "center",
+            "vertical-align": "middle",
+        }
+    })
+
     PAGES["default"] = {"actions":actions}
 
 make_default_page()

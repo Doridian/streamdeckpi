@@ -54,7 +54,21 @@ func mustLoadFont(ctrl controller.Controller, file string) *truetype.Font {
 
 var trueTypeFonts map[string]*truetype.Font
 
-func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, col color.RGBA, x, y int, fontSize float64, label string) {
+type FontAlign = int
+
+const (
+	FontAlignLeft FontAlign = iota
+	FontAlignCenter
+	FontAlignRight
+)
+
+const (
+	FontAlignTop FontAlign = iota
+	FontAlignMiddle
+	FontAlignBottom
+)
+
+func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, col color.RGBA, x, y int, fontSize float64, align, verticalAlign FontAlign, label string) {
 	if trueTypeFonts == nil {
 		trueTypeFonts = make(map[string]*truetype.Font)
 	}
@@ -78,7 +92,28 @@ func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, 
 		return
 	}
 
-	pointFont := fixed.Point26_6{X: point.X - (labelSize.X / 2), Y: point.Y + (labelHeight / 2)}
+	pointFont := fixed.Point26_6{X: 0, Y: 0}
+
+	switch align {
+	case FontAlignLeft:
+		pointFont.X = point.X
+	case FontAlignRight:
+		pointFont.X = point.X - labelSize.X
+	case FontAlignCenter:
+		fallthrough
+	default:
+		pointFont.X = point.X - (labelSize.X / 2)
+	}
+	switch verticalAlign {
+	case FontAlignTop:
+		pointFont.Y = point.Y + labelHeight
+	case FontAlignBottom:
+		pointFont.Y = point.Y
+	case FontAlignMiddle:
+		fallthrough
+	default:
+		pointFont.Y = point.Y + (labelHeight / 2)
+	}
 
 	ttCtx.SetClip(img.Rect)
 	ttCtx.SetDst(img)
