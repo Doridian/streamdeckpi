@@ -13,27 +13,42 @@ import (
 )
 
 func coerceNumber(val interface{}) (float64, bool) {
-	valNum, ok := val.(float64)
+	valF64, ok := val.(float64)
 	if ok {
-		return valNum, true
+		return valF64, true
 	}
 
-	valInt, ok := val.(int)
-	if ok {
-		return float64(valInt), true
-	}
-
-	valStr, ok := val.(string)
-	if !ok {
+	switch valT := val.(type) {
+	case int:
+		return float64(valT), true
+	case int8:
+		return float64(valT), true
+	case int16:
+		return float64(valT), true
+	case int32:
+		return float64(valT), true
+	case int64:
+		return float64(valT), true
+	case uint:
+		return float64(valT), true
+	case uint8:
+		return float64(valT), true
+	case uint16:
+		return float64(valT), true
+	case uint32:
+		return float64(valT), true
+	case uint64:
+		return float64(valT), true
+	case float32:
+		return float64(valT), true
+	case float64:
+		return valT, true
+	case string:
+		valF64, err := strconv.ParseFloat(valT, 64)
+		return valF64, err == nil
+	default:
 		return 0, false
 	}
-
-	valNum, err := strconv.ParseFloat(valStr, 64)
-	if err == nil {
-		return 0, false
-	}
-
-	return valNum, true
 }
 
 func loadFont(ctrl controller.Controller, file string) (*truetype.Font, error) {

@@ -100,6 +100,13 @@ func (i *haInstance) GetStates() error {
 	return nil
 }
 
+func (i *haInstance) OnStateHandleError(recv haStateReceiver, evt *haws.StateChangeEvent) {
+	err := recv.OnState(evt.EntityID, *evt.NewState)
+	if err != nil {
+		log.Printf("Error handling state change event for %s: %v", evt.EntityID, err)
+	}
+}
+
 func (i *haInstance) OnEvent(eventData *haws.EventData) {
 	evt := &haws.StateChangeEvent{}
 	err := json.Unmarshal(eventData.Data, evt)
@@ -117,7 +124,7 @@ func (i *haInstance) OnEvent(eventData *haws.EventData) {
 		return
 	}
 	for _, recv := range recvArr {
-		go recv.OnState(evt.EntityID, *evt.NewState)
+		go i.OnStateHandleError(recv, evt)
 	}
 }
 
@@ -135,6 +142,9 @@ func (i *haInstance) RegisterStateReceiver(recv haStateReceiver, entityID string
 
 	state, ok := i.states[entityID]
 	if ok {
-		go recv.OnState(entityID, state)
+		go i.OnStateHandleError(recv, &haws.StateChangeEvent{
+			EntityID: entityID,
+			NewState: &state,
+		})
 	}
 }

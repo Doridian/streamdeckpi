@@ -71,7 +71,30 @@ def make_default_page():
         "parameters": {
             "domain": "sensor",
             "entity": "sensor.dori_office_co2",
-            "icon": "icons/gauge_high.png",
+            "icon": "icons/gauge_full.png",
+            "conditions": [
+                {
+                    "condition": {
+                        "comparison": "<",
+                        "value": 600,
+                    },
+                    "icon": "icons/gauge_empty.png",
+                },
+                {
+                    "condition": {
+                        "comparison": "<",
+                        "value": 1000,
+                    },
+                    "icon": "icons/gauge_low.png",
+                },
+                {
+                    "condition": {
+                        "comparison": "<",
+                        "value": 1500,
+                    },
+                    "icon": "icons/gauge_high.png",
+                }
+            ],
             "texts": [
                 {
                     "color": [255, 255, 255, 255],

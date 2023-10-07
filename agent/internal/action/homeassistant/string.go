@@ -15,8 +15,8 @@ import (
 
 type haStringConditionOverride struct {
 	Condition haCondition `yaml:"condition"`
-	Icon      string      `yaml:"icon"`
 
+	Icon  string                `yaml:"icon"`
 	Texts []*haStringActionText `yaml:"texts"`
 }
 
@@ -76,7 +76,7 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 	}
 
 	for i, text := range a.Texts {
-		if currentMatch != nil {
+		if currentMatch != nil && len(currentMatch.Texts) > i {
 			currentMatchTexts := currentMatch.Texts[i]
 			if currentMatchTexts != nil {
 				if currentMatchTexts.Text != nil {
