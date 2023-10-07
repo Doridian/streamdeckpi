@@ -36,20 +36,16 @@ func coerceNumber(val interface{}) (float64, bool) {
 	return valNum, true
 }
 
-func mustLoadFont(ctrl controller.Controller, file string) *truetype.Font {
+func loadFont(ctrl controller.Controller, file string) (*truetype.Font, error) {
 	reader, err := ctrl.ResolveFile(file)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	data, err := io.ReadAll(reader)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	font, err := freetype.ParseFont(data)
-	if err != nil {
-		panic(err)
-	}
-	return font
+	return freetype.ParseFont(data)
 }
 
 var trueTypeFonts map[string]*truetype.Font
@@ -68,14 +64,18 @@ const (
 	FontAlignBottom
 )
 
-func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, col color.RGBA, x, y int, fontSize float64, align, verticalAlign FontAlign, label string) {
+func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, col color.RGBA, x, y int, fontSize float64, align, verticalAlign FontAlign, label string) error {
 	if trueTypeFonts == nil {
 		trueTypeFonts = make(map[string]*truetype.Font)
 	}
 
 	trueTypeFont := trueTypeFonts[font]
 	if trueTypeFont == nil {
-		trueTypeFont = mustLoadFont(ctrl, font)
+		var err error
+		trueTypeFont, err = loadFont(ctrl, font)
+		if err != nil {
+			return err
+		}
 		trueTypeFonts[font] = trueTypeFont
 	}
 
@@ -89,7 +89,7 @@ func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, 
 
 	labelSize, err := ttCtx.DrawString(label, fixed.Point26_6{})
 	if err != nil {
-		return
+		return err
 	}
 
 	pointFont := fixed.Point26_6{X: 0, Y: 0}
@@ -120,4 +120,6 @@ func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, 
 	ttCtx.SetSrc(image.NewUniform(col))
 
 	ttCtx.DrawString(label, pointFont)
+
+	return nil
 }

@@ -184,12 +184,16 @@ func (a *haStringAction) Render(force bool) (*streamdeck.ImageData, error) {
 	img := image.NewRGBA(baseImage.Bounds())
 
 	draw.Draw(img, img.Rect, baseImage, image.Point{}, draw.Src)
-	drawCenteredText(a.Controller, img, a.useFont, a.useColor, a.useX, a.useY, float64(a.useSize), a.useAlign, a.useVerticalAlign, a.state)
-	convImg, err = a.ImageHelper.Convert(img)
-
-	if err == nil {
-		a.doRender = false
+	err = drawCenteredText(a.Controller, img, a.useFont, a.useColor, a.useX, a.useY, float64(a.useSize), a.useAlign, a.useVerticalAlign, a.state)
+	if err != nil {
+		return nil, err
 	}
 
-	return convImg, err
+	convImg, err = a.ImageHelper.Convert(img)
+	if err != nil {
+		return nil, err
+	}
+
+	a.doRender = false
+	return convImg, nil
 }
