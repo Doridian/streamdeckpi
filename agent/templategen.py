@@ -101,6 +101,8 @@ def make_default_page():
 
 make_default_page()
 
-for name, page in PAGES.items():
-    with open(f"_gokrazy/extrafiles/etc/streamdeckpi/{name}.yml", "w") as f:
-        f.write(yaml_dump(page))
+with open("_gokrazy/extrafiles/etc/streamdeckpi/.gitignore", "w") as fign:
+    for name, page in PAGES.items():
+        fign.write(f"/{name}.yml\n")
+        with open(f"_gokrazy/extrafiles/etc/streamdeckpi/{name}.yml", "w") as f:
+            f.write(yaml_dump(page))
