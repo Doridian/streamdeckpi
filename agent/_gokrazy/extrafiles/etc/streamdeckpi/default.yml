@@ -109,15 +109,31 @@ actions:
   - 0
   name: homeassistant_string
   parameters:
-    align: center
-    color:
-    - 255
-    - 0
-    - 0
     domain: sensor
     entity: sensor.dori_office_co2
-    icon: icons/blank.png
-    size: 24
-    vertical-align: middle
-    x: 48.0
-    y: 48.0
+    icon: icons/gauge_high.png
+    texts:
+    - align: center
+      color:
+      - 255
+      - 0
+      - 0
+      - 255
+      font: font.ttf
+      size: 24
+      text: CO2
+      vertical-align: top
+      x: 48.0
+      y: 0
+    - align: center
+      color:
+      - 255
+      - 0
+      - 0
+      - 255
+      font: font.ttf
+      size: 24
+      text: $STATE ppm
+      vertical-align: bottom
+      x: 48.0
+      y: 96

@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"strings"
 
 	"github.com/Doridian/go-haws"
 	"github.com/Doridian/go-streamdeck"
@@ -16,38 +17,37 @@ type haStringConditionOverride struct {
 	Condition haCondition `yaml:"condition"`
 	Icon      string      `yaml:"icon"`
 
-	Color         []uint8 `yaml:"color"`
-	X             *int    `yaml:"x"`
-	Y             *int    `yaml:"y"`
-	Size          float64 `yaml:"size"`
-	Font          string  `yaml:"font"`
-	Align         string  `yaml:"align"`
-	VerticalAlign string  `yaml:"vertical-align"`
+	Texts []*haStringActionText `yaml:"texts"`
+}
+
+type haStringActionText struct {
+	Color         []uint8  `yaml:"color"`
+	X             *int     `yaml:"x"`
+	Y             *int     `yaml:"y"`
+	Size          *float64 `yaml:"size"`
+	Font          *string  `yaml:"font"`
+	Align         *string  `yaml:"align"`
+	VerticalAlign *string  `yaml:"vertical-align"`
+	Text          *string  `yaml:"text"`
+
+	color         color.RGBA
+	align         FontAlign
+	verticalAlign FontAlign
+	text          string
 }
 
 type haStringAction struct {
 	haEntityActionBase
 
-	Icon          string                       `yaml:"icon"`
-	Conditions    []*haStringConditionOverride `yaml:"conditions"`
-	Color         []uint8                      `yaml:"color"`
-	X             int                          `yaml:"x"`
-	Y             int                          `yaml:"y"`
-	Size          float64                      `yaml:"size"`
-	Font          string                       `yaml:"font"`
-	Align         string                       `yaml:"align"`
-	VerticalAlign string                       `yaml:"vertical-align"`
+	Icon       string                       `yaml:"icon"`
+	Conditions []*haStringConditionOverride `yaml:"conditions"`
+	Texts      []haStringActionText         `yaml:"texts"`
 
-	useFont          string
-	useColor         color.RGBA
-	useX             int
-	useY             int
-	useSize          float64
-	useIcon          string
-	useAlign         FontAlign
-	useVerticalAlign FontAlign
-	state            string
-	doRender         bool
+	useTexts []haStringActionText
+	useIcon  string
+
+	state    string
+	doRender bool
 }
 
 func (a *haStringAction) New() action.Action {
@@ -69,79 +69,73 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 	}
 
 	newUseIcon := a.Icon
-	newUseColor := a.Color
-	newUseX := a.X
-	newUseY := a.Y
-	newUseSize := a.Size
-	newUseFont := a.Font
-	newUseAlign := a.Align
-	newUseVerticalAlign := a.VerticalAlign
+	newUseTexts := make([]haStringActionText, 0, len(a.Texts))
 
-	if currentMatch != nil {
-		if currentMatch.Icon != "" {
-			newUseIcon = currentMatch.Icon
-		}
-		if currentMatch.Color != nil {
-			newUseColor = currentMatch.Color
-		}
-		if currentMatch.X != nil {
-			newUseX = *currentMatch.X
-		}
-		if currentMatch.Y != nil {
-			newUseY = *currentMatch.Y
-		}
-		if currentMatch.Size != 0 {
-			newUseSize = currentMatch.Size
-		}
-		if currentMatch.Font != "" {
-			newUseFont = currentMatch.Font
-		}
-		if currentMatch.Align != "" {
-			newUseAlign = currentMatch.Align
-		}
-		if currentMatch.VerticalAlign != "" {
-			newUseVerticalAlign = currentMatch.VerticalAlign
-		}
+	if currentMatch != nil && currentMatch.Icon != "" {
+		newUseIcon = currentMatch.Icon
 	}
 
-	if newUseFont == "" {
-		newUseFont = "font.ttf"
-	}
-	if newUseSize <= 0 {
-		newUseSize = 48
-	}
-	if newUseColor == nil {
-		newUseColor = []uint8{255, 255, 255}
-	}
-	if newUseAlign == "" {
-		newUseAlign = "center"
-	}
-	if newUseVerticalAlign == "" {
-		newUseVerticalAlign = "middle"
+	for i, text := range a.Texts {
+		if currentMatch != nil {
+			currentMatchTexts := currentMatch.Texts[i]
+			if currentMatchTexts != nil {
+				if currentMatchTexts.Text != nil {
+					text.Text = currentMatchTexts.Text
+				}
+				if currentMatchTexts.Color != nil {
+					text.Color = currentMatchTexts.Color
+				}
+				if currentMatchTexts.X != nil {
+					text.X = currentMatchTexts.X
+				}
+				if currentMatchTexts.Y != nil {
+					text.Y = currentMatchTexts.Y
+				}
+				if currentMatchTexts.Size != nil {
+					text.Size = currentMatchTexts.Size
+				}
+				if currentMatchTexts.Font != nil {
+					text.Font = currentMatchTexts.Font
+				}
+				if currentMatchTexts.Align != nil {
+					text.Align = currentMatchTexts.Align
+				}
+				if currentMatchTexts.VerticalAlign != nil {
+					text.VerticalAlign = currentMatchTexts.VerticalAlign
+				}
+			}
+		}
+
+		switch *text.Align {
+		case "left":
+			text.align = FontAlignLeft
+		case "right":
+			text.align = FontAlignRight
+		case "center":
+			fallthrough
+		default:
+			text.align = FontAlignCenter
+		}
+		switch *text.VerticalAlign {
+		case "top":
+			text.verticalAlign = FontAlignTop
+		case "bottom":
+			text.verticalAlign = FontAlignBottom
+		case "middle":
+			fallthrough
+		default:
+			text.verticalAlign = FontAlignMiddle
+
+		}
+
+		text.color = color.RGBA{text.Color[0], text.Color[1], text.Color[2], text.Color[3]}
+		text.text = strings.ReplaceAll(*text.Text, "$STATE", state.State)
+
+		newUseTexts = append(newUseTexts, text)
 	}
 
-	a.useColor = color.RGBA{newUseColor[0], newUseColor[1], newUseColor[2], 255}
-	a.useX = newUseX
-	a.useY = newUseY
+	a.useTexts = newUseTexts
 	a.useIcon = newUseIcon
-	a.useSize = newUseSize
-	a.useFont = newUseFont
-	switch newUseAlign {
-	case "left":
-		a.useAlign = FontAlignLeft
-	case "center":
-		a.useAlign = FontAlignCenter
-	case "right":
-		a.useAlign = FontAlignRight
-	}
-	switch newUseVerticalAlign {
-	case "top":
-		a.useVerticalAlign = FontAlignTop
-	case "middle":
-		a.useVerticalAlign = FontAlignMiddle
-	case "bottom":
-		a.useVerticalAlign = FontAlignBottom
-	}
 
 	a.state = state.State
 	a.doRender = true
@@ -184,9 +178,11 @@ func (a *haStringAction) Render(force bool) (*streamdeck.ImageData, error) {
 	img := image.NewRGBA(baseImage.Bounds())
 
 	draw.Draw(img, img.Rect, baseImage, image.Point{}, draw.Src)
-	err = drawCenteredText(a.Controller, img, a.useFont, a.useColor, a.useX, a.useY, float64(a.useSize), a.useAlign, a.useVerticalAlign, a.state)
-	if err != nil {
-		return nil, err
+	for _, text := range a.useTexts {
+		err = drawCenteredText(a.Controller, img, *text.Font, text.color, *text.X, *text.Y, *text.Size, text.align, text.verticalAlign, text.text)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	convImg, err = a.ImageHelper.Convert(img)

@@ -69,15 +69,31 @@ def make_default_page():
         "button": [2, 0],
         "name": "homeassistant_string",
         "parameters": {
-            "color": [255, 0, 0],
             "domain": "sensor",
             "entity": "sensor.dori_office_co2",
-            "icon": "icons/blank.png",
-            "size": 24,
-            "x": 96/2,
-            "y": 96/2,
-            "align": "center",
-            "vertical-align": "middle",
+            "icon": "icons/gauge_high.png",
+            "texts": [
+                {
+                    "color": [255, 0, 0, 255],
+                    "size": 24,
+                    "font": "font.ttf",
+                    "x": 96/2,
+                    "y": 0,
+                    "align": "center",
+                    "vertical-align": "top",
+                    "text": "CO2",
+                },
+                {
+                    "color": [255, 0, 0, 255],
+                    "size": 24,
+                    "font": "font.ttf",
+                    "x": 96/2,
+                    "y": 96,
+                    "align": "center",
+                    "vertical-align": "bottom",
+                    "text": "$STATE ppm",
+                }
+            ],
         }
     })
 
