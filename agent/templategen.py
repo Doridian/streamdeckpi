@@ -2,17 +2,17 @@
 
 from yaml import safe_dump as yaml_dump
 
-def make_onoff(entity_domain: str, entity_id: str, icon_type: str, action_type: str, pos: list[int], render_param_enhancer):
+def make_onoff(entity_domain: str, entity_id: str, icon_type: str, action_type: str, pos: list[int]):
     return {
         "button": pos,
         "name": "multi",
         "parameters": {
             "render": {
                 "name": action_type,
-                "parameters": render_param_enhancer({
+                "parameters": {
                     "domain": entity_domain,
                     "entity": entity_id,
-                }),
+                },
             },
             "run": [
                 {
@@ -56,26 +56,26 @@ def make_onoff(entity_domain: str, entity_id: str, icon_type: str, action_type: 
     }
 
 def make_light(entity_id: str, icon_type: str, pos: list[int]):
-    def __enhance_light(params):
-        params["on_icon"] = f"icons/{icon_type}_on.png"
-        params["off_icon"] = f"icons/{icon_type}_off.png"
-        return params
-    return make_onoff("light", entity_id, icon_type, "homeassistant_light", pos, __enhance_light)
+    action = make_onoff("light", entity_id, icon_type, "homeassistant_light", pos)
+    params = action["parameters"]["render"]["parameters"]
+    params["on_icon"] = f"icons/{icon_type}_on.png"
+    params["off_icon"] = f"icons/{icon_type}_off.png"
+    return action
 
 def make_switch(entity_id: str, icon_type: str, pos: list[int]):
-    def __enhance_switch(params):
-        params["icon"] = f"icons/{icon_type}_off.png"
-        params["conditions"] = [
-            {
-                "condition": {
-                    "comparison": "==",
-                    "value": "on",
-                },
-                "icon": f"icons/{icon_type}_on.png",
-            }
-        ]
-        return params
-    return make_onoff("switch", entity_id, icon_type, "homeassistant_entity", pos, __enhance_switch)
+    action = make_onoff("switch", entity_id, icon_type, "homeassistant_entity", pos)
+    params = action["parameters"]["render"]["parameters"]
+    params["icon"] = f"icons/{icon_type}_off.png"
+    params["conditions"] = [
+        {
+            "condition": {
+                "comparison": "==",
+                "value": "on",
+            },
+            "icon": f"icons/{icon_type}_on.png",
+        }
+    ]
+    return action
 
 def make_gauge(gaugetype: str, entity_domain: str, entity_id: str, thresholds: list[float], title: str, pos: list[int]):
     return {
@@ -136,11 +136,33 @@ def make_gauge(gaugetype: str, entity_domain: str, entity_id: str, thresholds: l
 
 PAGES = {}
 
+def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
+    subpage_name = f"light_{entity_id}"
+
+    actions = []
+    actions.append(make_light(entity_id, icon_type, [0,0]))
+    actions.append({
+        "button": [7, 0],
+        "name": "pop_page",
+        "parameters": {
+            "icon": "icons/back.png",
+        }
+    })
+    PAGES[subpage_name] = {"actions":actions}
+
+    action = make_light(entity_id, icon_type, pos)
+    long_action = action["parameters"]["run"][1]
+    long_action["name"] = "push_page"
+    long_action["parameters"] = {
+        "target": f"{subpage_name}.yml",
+    }
+    return action
+
 def make_default_page():
     actions = []
-    actions.append(make_light("light.hue_color_lamp_1_3", "floor_light_top", [1, 0]))
-    actions.append(make_light("light.hue_color_candle_1_2", "floor_light_bottom", [1, 1]))
-    actions.append(make_light("light.hue_lightguide_bulb_1", "ceiling_light", [2, 0]))
+    actions.append(make_light_subpage("light.hue_color_lamp_1_3", "floor_light_top", [1, 0]))
+    actions.append(make_light_subpage("light.hue_color_candle_1_2", "floor_light_bottom", [1, 1]))
+    actions.append(make_light_subpage("light.hue_lightguide_bulb_1", "ceiling_light", [2, 0]))
 
     actions.append(make_switch("switch.dori_pc_switch", "desktop", [1, 3]))
     actions.append(make_switch("switch.dori_desktop_relay", "monitor", [2, 3]))

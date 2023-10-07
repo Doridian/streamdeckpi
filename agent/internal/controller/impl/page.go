@@ -72,6 +72,22 @@ func (c *controllerImpl) unrefPage(pageObj *page) {
 	c.pageCacheLock.Unlock()
 }
 
+func (c *controllerImpl) doPageSwap(newPage *page) error {
+	oldPage := c.pageTop
+	c.pageTop = newPage
+
+	// Reset press status of old page
+	for _, action := range oldPage.actions {
+		go c.runActionHandleError(action, false)
+	}
+	// Reset press status of new page
+	for _, action := range newPage.actions {
+		go c.runActionHandleError(action, false)
+	}
+
+	return nil
+}
+
 func (c *controllerImpl) SwapPage(pageFile string) error {
 	pageObj, err := c.resolvePage(pageFile)
 	if err != nil {
@@ -83,9 +99,7 @@ func (c *controllerImpl) SwapPage(pageFile string) error {
 
 	c.unrefPage(c.pageTop)
 	c.pageStack[len(c.pageStack)-1] = pageObj
-	c.pageTop = pageObj
-
-	return nil
+	return c.doPageSwap(pageObj)
 }
 
 func (c *controllerImpl) PushPage(pageFile string) error {
@@ -98,9 +112,7 @@ func (c *controllerImpl) PushPage(pageFile string) error {
 	defer c.pageWait.Unlock()
 
 	c.pageStack = append(c.pageStack, pageObj)
-	c.pageTop = pageObj
-
-	return nil
+	return c.doPageSwap(pageObj)
 }
 
 func (c *controllerImpl) PopPage() error {
@@ -114,7 +126,5 @@ func (c *controllerImpl) PopPage() error {
 
 	c.unrefPage(c.pageTop)
 	c.pageStack = c.pageStack[:newLen]
-	c.pageTop = c.pageStack[newLen-1]
-
-	return nil
+	return c.doPageSwap(c.pageStack[newLen-1])
 }

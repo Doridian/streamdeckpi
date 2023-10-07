@@ -3,6 +3,8 @@ package impl
 import (
 	"errors"
 	"log"
+
+	"github.com/Doridian/streamdeckpi/agent/internal/action"
 )
 
 func (c *controllerImpl) buttonLoop() {
@@ -27,6 +29,10 @@ func (c *controllerImpl) buttonLoop() {
 
 func (c *controllerImpl) handleButtonPress(idx int, pressed bool) {
 	actionObj := c.pageTop.actions[idx]
+	c.runActionHandleError(actionObj, pressed)
+}
+
+func (c *controllerImpl) runActionHandleError(actionObj action.Action, pressed bool) {
 	if actionObj == nil {
 		return
 	}
