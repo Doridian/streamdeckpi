@@ -21,6 +21,7 @@ type haStringConditionOverride struct {
 	Y     *int    `yaml:"y"`
 	Size  float64 `yaml:"size"`
 	Font  string  `yaml:"font"`
+	Align string  `yaml:"align"`
 }
 
 type haStringAction struct {
@@ -33,6 +34,7 @@ type haStringAction struct {
 	Y          int                          `yaml:"y"`
 	Size       float64                      `yaml:"size"`
 	Font       string                       `yaml:"font"`
+	Align      string                       `yaml:"align"`
 
 	useFont  string
 	useColor color.RGBA
@@ -40,6 +42,7 @@ type haStringAction struct {
 	useY     int
 	useSize  float64
 	useIcon  string
+	useAlign string
 	state    string
 	doRender bool
 }
@@ -67,7 +70,8 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 	newUseX := a.X
 	newUseY := a.Y
 	newUseSize := a.Size
-	newFont := a.Font
+	newUseFont := a.Font
+	newUseAlign := a.Align
 
 	if currentMatch != nil {
 		if currentMatch.Icon != nil {
@@ -86,12 +90,15 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 			newUseSize = currentMatch.Size
 		}
 		if currentMatch.Font != "" {
-			newFont = currentMatch.Font
+			newUseFont = currentMatch.Font
+		}
+		if currentMatch.Align != "" {
+			newUseAlign = currentMatch.Align
 		}
 	}
 
-	if newFont == "" {
-		newFont = "font.ttf"
+	if newUseFont == "" {
+		newUseFont = "font.ttf"
 	}
 	if newUseSize <= 0 {
 		newUseSize = 48
@@ -104,8 +111,9 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 	a.useX = newUseX
 	a.useY = newUseY
 	a.useIcon = newUseIcon
-	a.useSize = a.Size
-	a.useFont = newFont
+	a.useSize = newUseSize
+	a.useFont = newUseFont
+	a.useAlign = newUseAlign
 
 	a.state = state.State
 	a.doRender = true
