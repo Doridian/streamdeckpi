@@ -138,6 +138,9 @@ def make_gauge(gaugetype: str, entity_domain: str, entity_id: str, thresholds: l
 
 PAGES = {}
 
+def filter_service_data_optional(service_data: dict):
+    return {k:v for k,v in service_data.items() if v is not None}
+
 def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
     subpage_name = f"light_{entity_id}"
 
@@ -170,29 +173,51 @@ def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
         })
 
     preset_colors = [
-        [255, 0  , 0  ],
-        [0  , 255, 0  ],
-        [0  , 0  , 255],
-        [255, 255, 0  ],
-        [0  , 255, 255],
-        [255, 0  , 255],
-        [255, 128, 0  ],
-        [255, 255, 255],
+        [255, 0  , 0  ], # red
+        [0  , 255, 0  ], # green
+        [0  , 0  , 255], # blue
+        [255, 255, 0  ], # yellow
+        [0  , 255, 255], # cyan
+        [255, 0  , 255], # magenta
+        [255, 128, 0  ], # orange
+        [255, 255, 255], # white
 
-        [255, 147, 41 ],
-        [201, 226 ,255],
-        [64 , 156, 255],
-        [255, 244, 229],
-        [244, 255, 250],
-        [255, 197, 143],
-        [255, 214, 170],
-        [255, 241, 224],
+        [255, 252, 247], # energize
+        [255, 212, 178], # concentrate
+        [255, 174, 103], # read
+        [255, 148, 43 ], # relax
+        [255, 161, 40 ], # nightlight
+        [255, 166, 87 ], # dimmed
+        [255, 166, 87 ], # bright
+        [255, 241, 224], # N/A
     ]
+
+    preset_brightness = [
+        None, # red
+        None, # green
+        None, # blue
+        None, # yellow
+        None, # cyan
+        None, # magenta
+        None, # orange
+        None, # white
+
+        255, # energize
+        255, # concentrate
+        255, # read
+        143, # relax
+        6  , # nightlight
+        76 , # dimmed
+        210, # bright
+        255, # N/A
+    ]
+
     for i in range(0, 16):
         x = i % 16
         y = i // 16
 
         rgb_color = preset_colors[i]
+        bright = preset_brightness[i]
 
         actions.append({
             "button": [x, y + 2],
@@ -203,11 +228,13 @@ def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
                 "domain": "light",
                 "entity": entity_id,
                 "service_name": "turn_on",
-                "service_data": {
+                "service_data": filter_service_data_optional({
                     "rgb_color": rgb_color,
-                },
+                    "brightness": bright,
+                }),
                 "render_state": "on",
                 "render_rgb_color": rgb_color,
+                "render_brightness": bright,
             }
         })
 
