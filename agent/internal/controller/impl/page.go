@@ -69,6 +69,7 @@ func (c *controllerImpl) resolvePage(pageFile string) (*page, error) {
 func (c *controllerImpl) unrefPage(pageObj *page) {
 	c.pageCacheLock.Lock()
 	pageObj.refCnt--
+	// TODO: Maybe remove page from cache if refCnt == 0?
 	c.pageCacheLock.Unlock()
 }
 
