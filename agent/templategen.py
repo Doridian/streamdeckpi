@@ -157,11 +157,11 @@ def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
                 "off_icon": f"icons/{icon_type}_off.png",
                 "domain": "light",
                 "entity": entity_id,
-                "service_name": "turn_on",
+                "service_name": "turn_off" if i == 0 else "turn_on",
                 "service_data": {
                     "brightness": i*32,
-                },
-                "render_state": "on",
+                } if i > 0 else None,
+                "render_state": "off" if i == 0 else "on",
                 "render_brightness": i*32,
             }
         })
