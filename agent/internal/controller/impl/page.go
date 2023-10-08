@@ -132,9 +132,12 @@ func (c *controllerImpl) PopPage() error {
 
 func (c *controllerImpl) PreloadPage(pageFile string) error {
 	go func() {
+		log.Printf("Preloading page %s", pageFile)
 		_, err := c.resolvePage(pageFile)
 		if err != nil {
 			log.Printf("Error preloading page %s: %v", pageFile, err)
+		} else {
+			log.Printf("Preloaded page %s", pageFile)
 		}
 	}()
 	return nil
