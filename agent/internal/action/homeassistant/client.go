@@ -28,11 +28,15 @@ type haInstance struct {
 }
 
 var haInstances = map[string]*haInstance{}
+var haInstanceLock sync.Mutex
 
 func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, error) {
 	if name == "" {
 		name = "default"
 	}
+
+	haInstanceLock.Lock()
+	defer haInstanceLock.Unlock()
 
 	instance, ok := haInstances[name]
 	if !ok {
@@ -78,6 +82,7 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 			return nil, err
 		}
 
+		haInstances[name] = instance
 	}
 
 	return instance, nil

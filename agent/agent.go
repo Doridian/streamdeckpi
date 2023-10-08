@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Doridian/go-streamdeck"
+
 	controller_impl "github.com/Doridian/streamdeckpi/agent/internal/controller/impl"
 )
 
