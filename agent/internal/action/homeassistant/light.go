@@ -37,7 +37,7 @@ func convColorElement(elem interface{}, brightness float64) uint8 {
 	if !ok {
 		return 255
 	}
-	col *= (brightness / 255.0)
+	col *= ((brightness / 255.0) * 0.8) + 0.2
 	return uint8(col)
 }
 
