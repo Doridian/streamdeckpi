@@ -2,6 +2,7 @@ package impl
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"github.com/Doridian/streamdeckpi/agent/internal/action"
@@ -127,4 +128,14 @@ func (c *controllerImpl) PopPage() error {
 	c.unrefPage(c.pageTop)
 	c.pageStack = c.pageStack[:newLen]
 	return c.doPageSwap(c.pageStack[newLen-1])
+}
+
+func (c *controllerImpl) PreloadPage(pageFile string) error {
+	go func() {
+		_, err := c.resolvePage(pageFile)
+		if err != nil {
+			log.Printf("Error preloading page %s: %v", pageFile, err)
+		}
+	}()
+	return nil
 }

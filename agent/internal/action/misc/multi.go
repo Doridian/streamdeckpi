@@ -1,6 +1,8 @@
 package misc
 
 import (
+	"log"
+	"sync"
 	"time"
 
 	"github.com/Doridian/go-streamdeck"
@@ -48,6 +50,8 @@ type multi struct {
 	runHistory       []*runEntry
 	lastRunCheck     time.Time
 	lastPressedState bool
+
+	checkActionLock sync.Mutex
 }
 
 func (m *multiActionMapped) matches(runHistory []*runEntry) bool {
@@ -128,6 +132,11 @@ func (a *multi) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelpe
 }
 
 func (a *multi) checkActions() error {
+	if !a.checkActionLock.TryLock() {
+		return nil
+	}
+	defer a.checkActionLock.Unlock()
+
 	a.lastRunCheck = time.Now()
 
 	for _, runAction := range a.runActions {
@@ -157,12 +166,17 @@ func (a *multi) Run(pressed bool) error {
 	return a.checkActions()
 }
 
+func (a *multi) goCheckActions() {
+	err := a.checkActions()
+	if err != nil {
+		log.Printf("Error checking actions: %v", err)
+	}
+}
+
 func (a *multi) Render(force bool) (*streamdeck.ImageData, error) {
-	if time.Since(a.lastRunCheck) > time.Millisecond*100 {
-		err := a.checkActions()
-		if err != nil {
-			return nil, err
-		}
+	if time.Since(a.lastRunCheck) > time.Millisecond*10 {
+		a.lastRunCheck = time.Now()
+		go a.goCheckActions()
 	}
 	return a.renderAction.Render(force)
 }

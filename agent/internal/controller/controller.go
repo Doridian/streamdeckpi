@@ -3,6 +3,7 @@ package controller
 import "io"
 
 type Controller interface {
+	PreloadPage(pageFile string) error
 	SwapPage(pageFile string) error
 	PushPage(pageFile string) error
 	PopPage() error

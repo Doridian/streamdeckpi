@@ -15,12 +15,16 @@ func (a *swapPage) New() action.Action {
 	return &swapPage{}
 }
 
-func (a *swapPage) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, controller controller.Controller) error {
-	err := a.ActionWithIcon.ApplyConfig(config, imageHelper, controller)
+func (a *swapPage) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHelper, ctrl controller.Controller) error {
+	err := a.ActionWithIcon.ApplyConfig(config, imageHelper, ctrl)
 	if err != nil {
 		return err
 	}
-	return config.Decode(a)
+	err = config.Decode(a)
+	if err != nil {
+		return err
+	}
+	return ctrl.PreloadPage(a.Target)
 }
 
 func (a *swapPage) Run(pressed bool) error {

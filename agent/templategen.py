@@ -46,7 +46,7 @@ def make_onoff(entity_domain: str, entity_id: str, icon_type: str, action_type: 
                     "conditions": [
                         {
                             "pressed": True,
-                            "min": "1000ms",
+                            "min": "500ms",
                             "max": "2000ms",
                         },
                     ],

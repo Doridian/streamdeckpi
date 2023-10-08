@@ -20,7 +20,11 @@ func (a *pushPage) ApplyConfig(config *yaml.Node, imageHelper controller.ImageHe
 	if err != nil {
 		return err
 	}
-	return config.Decode(a)
+	err = config.Decode(a)
+	if err != nil {
+		return err
+	}
+	return ctrl.PreloadPage(a.Target)
 }
 
 func (a *pushPage) Run(pressed bool) error {
