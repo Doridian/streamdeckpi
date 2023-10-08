@@ -189,7 +189,7 @@ def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
         [255, 161, 40 ], # nightlight
         [255, 166, 87 ], # dimmed
         [255, 166, 87 ], # bright
-        [255, 241, 224], # N/A
+        [255, 148, 43 ], # relax bright
     ]
 
     preset_brightness = [
@@ -209,7 +209,7 @@ def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
         6  , # nightlight
         76 , # dimmed
         210, # bright
-        255, # N/A
+        255, # relax bright
     ]
 
     for i in range(0, 16):
