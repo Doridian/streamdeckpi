@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-from yaml import safe_dump as yaml_dump
+from yaml import safe_dump as yaml_dump, SafeDumper
+
+SafeDumper.ignore_aliases = lambda *args : True
 
 def make_onoff(entity_domain: str, entity_id: str, icon_type: str, action_type: str, pos: list[int]):
     return {
@@ -149,6 +151,7 @@ def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
         }
     })
     for i in range(0, 8):
+        brightness = i*32
         actions.append({
             "button": [i, 1],
             "name": "homeassistant_light",
@@ -159,12 +162,55 @@ def make_light_subpage(entity_id: str, icon_type: str, pos: list[int]):
                 "entity": entity_id,
                 "service_name": "turn_on" if i > 0 else "turn_off",
                 "service_data": {
-                    "brightness": i*32,
+                    "brightness": brightness,
                 } if i > 0 else None,
                 "render_state": "on" if i > 0 else "off",
-                "render_brightness": i*32,
+                "render_brightness": brightness,
             }
         })
+
+    preset_colors = [
+        [255, 0  , 0  ],
+        [0  , 255, 0  ],
+        [0  , 0  , 255],
+        [255, 255, 0  ],
+        [0  , 255, 255],
+        [255, 0  , 255],
+        [255, 128, 0  ],
+        [255, 255, 255],
+
+        [255, 147, 41 ],
+        [201, 226 ,255],
+        [64 , 156, 255],
+        [255, 244, 229],
+        [244, 255, 250],
+        [255, 197, 143],
+        [255, 214, 170],
+        [255, 241, 224],
+    ]
+    for i in range(0, 16):
+        x = i % 16
+        y = i // 16
+
+        rgb_color = preset_colors[i]
+
+        actions.append({
+            "button": [x, y + 2],
+            "name": "homeassistant_light",
+            "parameters": {
+                "on_icon": f"icons/{icon_type}_on.png",
+                "off_icon": f"icons/{icon_type}_off.png",
+                "domain": "light",
+                "entity": entity_id,
+                "service_name": "turn_on",
+                "service_data": {
+                    "rgb_color": rgb_color,
+                },
+                "render_state": "on",
+                "render_rgb_color": rgb_color,
+            }
+        })
+
     PAGES[subpage_name] = {"actions":actions}
 
     action = make_light(entity_id, icon_type, pos)
