@@ -1,5 +1,5 @@
-github.com/Doridian/go-haws v0.3.1 h1:PKv9A7OeW6BGPbSO/YhMM9RDJKiNx1Fwu4Rb1xyd/a8=
-github.com/Doridian/go-haws v0.3.1/go.mod h1:URhkP8sptqHuXVtLqdEX7fKx7GrgRlLSjuWKofY33dw=
+github.com/Doridian/go-haws v0.3.2 h1:RLMi3Vo7hp+7vcxjYWA8qcu9CiC2mNPwvCAzKlXa9fo=
+github.com/Doridian/go-haws v0.3.2/go.mod h1:URhkP8sptqHuXVtLqdEX7fKx7GrgRlLSjuWKofY33dw=
 github.com/Doridian/go-streamdeck v1.3.2 h1:X3iAHv+BClvjRQPZz7I/pAi5x9mOnAP2Iqlgo+KxwVY=
 github.com/Doridian/go-streamdeck v1.3.2/go.mod h1:U6W3ynV0FrKuQVa5ihkdyfWA4OaRQ5X9NsN2j5hRLNI=
 github.com/KarpelesLab/hid v0.1.0 h1:TQodVh83+piiiJbuoy8d1w2DFjkI3KS/8Efj0V05ur0=
@@ -9,8 +9,6 @@ github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 h1:DACJavvAHhabrF0
 github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0/go.mod h1:E/TSTwGwJL78qG/PmXZO1EjYhfJinVAhrmmHX6Z8B9k=
 github.com/gorilla/websocket v1.5.0 h1:PPwGk2jz7EePpoHN/+ClbZu8SPxiqlu12wZP/3sWmnc=
 github.com/gorilla/websocket v1.5.0/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
-github.com/karalabe/hid v1.0.1-0.20190806082151-9c14560f9ee8 h1:AP5krei6PpUCFOp20TSmxUS4YLoLvASBcArJqM/V+DY=
-github.com/karalabe/hid v1.0.1-0.20190806082151-9c14560f9ee8/go.mod h1:Vr51f8rUOLYrfrWDFlV12GGQgM5AT8sVh+2fY4MPeu8=
 golang.org/x/image v0.13.0 h1:3cge/F/QTkNLauhf2QoE9zp+7sr+ZcL4HnoZmdwg9sg=
 golang.org/x/image v0.13.0/go.mod h1:6mmbMOeV28HuMTgA6OSRkdXKYw/t5W9Uwn2Yv1r3Yxk=
 golang.org/x/sys v0.0.0-20210514084401-e8d321eab015/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
