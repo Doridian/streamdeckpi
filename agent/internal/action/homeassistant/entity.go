@@ -109,6 +109,10 @@ func (a *haEntityAction) ApplyConfig(config *yaml.Node, imageHelper controller.I
 		a.Conditions = make([]*haConditionOverride, 0)
 	}
 
+	if a.currentIcon == "" {
+		a.currentIcon = a.Icon
+	}
+
 	a.instance.RegisterStateReceiver(a, a.Entity)
 
 	return nil

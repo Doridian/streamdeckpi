@@ -36,7 +36,7 @@ func (c *controllerImpl) render() {
 
 		img, renderErr = c.renderAction(actionObj, force)
 		if renderErr != nil {
-			log.Printf("Error rendering action: %v", renderErr)
+			log.Printf("Error rendering action [%v]: %v", actionObj, renderErr)
 			img = nil
 		}
 

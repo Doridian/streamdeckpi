@@ -155,6 +155,10 @@ func (a *haStringAction) ApplyConfig(config *yaml.Node, imageHelper controller.I
 
 	a.instance.RegisterStateReceiver(a, a.Entity)
 
+	if a.useIcon == "" {
+		a.useIcon = a.Icon
+	}
+
 	return nil
 }
 

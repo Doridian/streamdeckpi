@@ -77,6 +77,8 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 }
 
 func (i *haInstance) onConnect() {
+	log.Printf("Websocket connection established")
+
 	err := i.client.WaitAuth()
 	if err != nil {
 		i.client.Close()
@@ -84,12 +86,16 @@ func (i *haInstance) onConnect() {
 		return
 	}
 
+	log.Printf("Websocket connection authenticated")
+
 	err = i.GetStates()
 	if err != nil {
 		i.client.Close()
 		log.Printf("onConnect() error GetStates(): %v", err)
 		return
 	}
+
+	log.Printf("Websocket connection handshake done")
 }
 
 func (i *haInstance) GetStates() error {
@@ -104,6 +110,19 @@ func (i *haInstance) GetStates() error {
 	i.states = make(map[string]haws.State)
 	for _, state := range states {
 		i.states[state.EntityID] = state
+
+		recvArr := i.stateReceiverMap[state.EntityID]
+		if recvArr == nil {
+			continue
+		}
+
+		stateCopyRef := state
+		for _, recv := range recvArr {
+			go i.OnStateHandleError(recv, &haws.StateChangeEvent{
+				EntityID: stateCopyRef.EntityID,
+				NewState: &stateCopyRef,
+			})
+		}
 	}
 
 	return nil
