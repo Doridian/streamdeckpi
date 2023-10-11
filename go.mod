@@ -3,7 +3,7 @@ module github.com/Doridian/streamdeckpi
 go 1.19
 
 require (
-	github.com/Doridian/go-haws v0.3.2
+	github.com/Doridian/go-haws v0.4.0
 	github.com/Doridian/go-streamdeck v1.3.2
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	golang.org/x/image v0.13.0

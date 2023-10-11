@@ -57,7 +57,7 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 			return nil, err
 		}
 
-		instance.client = haws.NewClient(instance.Url, instance.Token, time.Duration(5)*time.Second)
+		instance.client = haws.NewClient(instance.Url, instance.Token, instance.onConnect, time.Duration(5)*time.Second)
 
 		err = instance.client.Open()
 		if err != nil {
@@ -70,22 +70,26 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 			return nil, err
 		}
 
-		err = instance.client.WaitAuth()
-		if err != nil {
-			instance.client.Close()
-			return nil, err
-		}
-
-		err = instance.GetStates()
-		if err != nil {
-			instance.client.Close()
-			return nil, err
-		}
-
 		haInstances[name] = instance
 	}
 
 	return instance, nil
+}
+
+func (i *haInstance) onConnect() {
+	err := i.client.WaitAuth()
+	if err != nil {
+		i.client.Close()
+		log.Printf("onConnect() error WaitAuth(): %v", err)
+		return
+	}
+
+	err = i.GetStates()
+	if err != nil {
+		i.client.Close()
+		log.Printf("onConnect() error GetStates(): %v", err)
+		return
+	}
 }
 
 func (i *haInstance) GetStates() error {
