@@ -116,7 +116,12 @@ func (i *haInstance) OnEvent(eventData *haws.EventData) {
 	evt := &haws.StateChangeEvent{}
 	err := json.Unmarshal(eventData.Data, evt)
 	if err != nil {
-		log.Printf("Invalid state change event JSON: %v", err)
+		log.Printf("Invalid state change event JSON: %v: %s", err, eventData.Data)
+		return
+	}
+
+	if evt.NewState == nil {
+		log.Printf("Invalid state change event: missing NewState: %s", eventData.Data)
 		return
 	}
 
