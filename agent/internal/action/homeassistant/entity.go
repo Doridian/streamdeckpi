@@ -109,10 +109,6 @@ func (a *haEntityAction) ApplyConfig(config *yaml.Node, imageHelper controller.I
 		a.Conditions = make([]*haConditionOverride, 0)
 	}
 
-	if a.currentIcon == "" {
-		a.currentIcon = a.Icon
-	}
-
 	a.instance.RegisterStateReceiver(a, a.Entity)
 
 	return nil
@@ -132,6 +128,10 @@ func (a *haEntityAction) Run(pressed bool) error {
 func (a *haEntityAction) Render(force bool) (*streamdeck.ImageData, error) {
 	toRender := a.currentIcon
 	if toRender == a.lastRenderedIcon && !force {
+		return nil, nil
+	}
+
+	if toRender == "" {
 		return nil, nil
 	}
 

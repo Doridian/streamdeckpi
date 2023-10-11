@@ -46,8 +46,9 @@ type haStringAction struct {
 	useTexts []haStringActionText
 	useIcon  string
 
-	state    string
-	doRender bool
+	state     string
+	doRender  bool
+	canRender bool
 }
 
 func (a *haStringAction) New() action.Action {
@@ -138,6 +139,7 @@ func (a *haStringAction) OnState(entityID string, state haws.State) error {
 	a.useIcon = newUseIcon
 
 	a.state = state.State
+	a.canRender = true
 	a.doRender = true
 	return nil
 }
@@ -155,10 +157,6 @@ func (a *haStringAction) ApplyConfig(config *yaml.Node, imageHelper controller.I
 
 	a.instance.RegisterStateReceiver(a, a.Entity)
 
-	if a.useIcon == "" {
-		a.useIcon = a.Icon
-	}
-
 	return nil
 }
 
@@ -168,6 +166,10 @@ func (a *haStringAction) Name() string {
 
 func (a *haStringAction) Render(force bool) (*streamdeck.ImageData, error) {
 	if !force && !a.doRender {
+		return nil, nil
+	}
+
+	if !a.canRender {
 		return nil, nil
 	}
 
