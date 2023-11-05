@@ -12,7 +12,7 @@ require (
 
 require (
 	github.com/KarpelesLab/hid v0.1.0 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/karalabe/hid v1.0.1-0.20190806082151-9c14560f9ee8 // indirect
 )
 
