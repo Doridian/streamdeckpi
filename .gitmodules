@@ -1,3 +1,0 @@
-[submodule "deps/karalabe-hid"]
-	path = deps/karalabe-hid
-	url = https://github.com/Doridian/karalabe-hid
