@@ -6,7 +6,9 @@
         "github.com/gokrazy/serial-busybox",
         "github.com/gokrazy/breakglass"
     ],
-    "KernelPackage": "github.com/Doridian/gokrazy-kernel",
+    "BootloaderExtraLines": [
+        "dtoverlay=dwc2,dr_mode=host"
+    ],
     "PackageConfig": {
         "github.com/gokrazy/breakglass": {
             "CommandLineFlags": [
