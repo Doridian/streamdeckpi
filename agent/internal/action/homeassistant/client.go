@@ -153,6 +153,8 @@ func (i *haInstance) OnEvent(eventData *haws.EventData) {
 	recvArr := i.stateReceiverMap[evt.EntityID]
 	i.stateLock.Unlock()
 
+	log.Printf("State change event for %s: %v", evt.EntityID, evt)
+
 	if recvArr == nil {
 		return
 	}
