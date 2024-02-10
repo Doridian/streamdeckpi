@@ -94,7 +94,7 @@ def make_rca_switcher_input_button(entity_id: str, icon_type: str, index: int, p
             "conditions": [
                 {
                     "condition": {
-                        "comparison": "==",
+                        "comparison": "~=",
                         "value": index,
                     },
                     "icon": f"icons/{icon_type}_on.png",

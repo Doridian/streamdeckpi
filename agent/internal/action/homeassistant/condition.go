@@ -27,6 +27,7 @@ const (
 	compareLessThanOrEqual
 	compareGreaterThanOrEqual
 	compareGreaterThan
+	compareNear
 )
 
 var comparisonEnumMap = map[string]int{
@@ -39,6 +40,8 @@ var comparisonEnumMap = map[string]int{
 	"<>":  compareNotEquals,
 	"ne":  compareNotEquals,
 	"not": compareNotEquals,
+
+	"~=": compareNear,
 
 	"<":  compareLessThan,
 	"lt": compareLessThan,
@@ -54,7 +57,7 @@ var comparisonEnumMap = map[string]int{
 }
 
 func isNumericComparison(comp int) bool {
-	return comp == compareLessThan || comp == compareLessThanOrEqual || comp == compareGreaterThan || comp == compareGreaterThanOrEqual
+	return comp == compareLessThan || comp == compareLessThanOrEqual || comp == compareGreaterThan || comp == compareGreaterThanOrEqual || comp == compareNear
 }
 
 func (c *haCondition) UnmarshalYAML(unmarshal func(interface{}) error) error {
@@ -118,6 +121,9 @@ func (c *haCondition) Evaluate(state *haws.State) (bool, error) {
 			return valNum > c.valueNum, nil
 		case compareGreaterThanOrEqual:
 			return valNum >= c.valueNum, nil
+		case compareNear:
+			valDiff := valNum - c.valueNum
+			return valDiff < 0.01 && valDiff > -0.01, nil
 		default:
 			return false, errors.New("invalid number comparison, this is a bug")
 		}
