@@ -290,9 +290,9 @@ def make_default_page():
     actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_2_5um_concentration", [10, 50, 500], "2.5 um", [0, 2]))
     actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_10_0um_concentration", [10, 50, 500], "10 um", [0, 3]))
 
-    actions.append(make_rca_switcher_input_button("dori_rca_switcher_input", "network", 1, [7, 0]))
-    actions.append(make_rca_switcher_input_button("dori_rca_switcher_input", "tv", 2, [7, 1]))
-    actions.append(make_rca_switcher_input_button("dori_rca_switcher_input", "computer", 8, [7, 2]))
+    actions.append(make_rca_switcher_input_button("number.dori_rca_switcher_input", "network", 1, [7, 0]))
+    actions.append(make_rca_switcher_input_button("number.dori_rca_switcher_input", "tv", 2, [7, 1]))
+    actions.append(make_rca_switcher_input_button("number.dori_rca_switcher_input", "computer", 8, [7, 2]))
 
     PAGES["default"] = {"actions":actions}
 
