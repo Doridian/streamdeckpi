@@ -4,7 +4,7 @@ from yaml import safe_dump as yaml_dump, SafeDumper
 
 SafeDumper.ignore_aliases = lambda *args : True
 
-def make_onoff(entity_domain: str, entity_id: str, icon_type: str, action_type: str, pos: list[int]):
+def make_onoff(entity_domain: str, entity_id: str, action_type: str, pos: list[int]):
     return {
         "button": pos,
         "name": "multi",
@@ -58,14 +58,14 @@ def make_onoff(entity_domain: str, entity_id: str, icon_type: str, action_type: 
     }
 
 def make_light(entity_id: str, icon_type: str, pos: list[int]):
-    action = make_onoff("light", entity_id, icon_type, "homeassistant_light", pos)
+    action = make_onoff("light", entity_id, "homeassistant_light", pos)
     params = action["parameters"]["render"]["parameters"]
     params["on_icon"] = f"icons/{icon_type}_on.png"
     params["off_icon"] = f"icons/{icon_type}_off.png"
     return action
 
 def make_switch(entity_id: str, icon_type: str, pos: list[int]):
-    action = make_onoff("switch", entity_id, icon_type, "homeassistant_entity", pos)
+    action = make_onoff("switch", entity_id, "homeassistant_entity", pos)
     params = action["parameters"]["render"]["parameters"]
     params["icon"] = f"icons/{icon_type}_off.png"
     params["conditions"] = [
