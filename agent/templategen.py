@@ -259,6 +259,7 @@ def make_default_page():
 
     actions.append(make_switch("switch.dori_pc_switch", "desktop", [1, 3]))
     actions.append(make_switch("switch.dori_desktop_relay", "monitor", [2, 3]))
+    actions.append(make_switch("switch.mister_relay", "game", [3, 3]))
 
     actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_co2", [600, 1000, 1500], "CO2", [0, 0]))
     actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_1_0um_concentration", [10, 50, 500], "1.0 um", [0, 1]))
@@ -269,8 +270,8 @@ def make_default_page():
 
 make_default_page()
 
-with open("_gokrazy/extrafiles/etc/streamdeckpi/.gitignore", "w") as fign:
+with open("_gokrazy/extrafiles/etc/streamdeckpi/.gitignore", "wb") as fign:
     for name, page in PAGES.items():
-        fign.write(f"/{name}.yml\n")
-        with open(f"_gokrazy/extrafiles/etc/streamdeckpi/{name}.yml", "w") as f:
-            f.write(yaml_dump(page))
+        fign.write(f"/{name}.yml\n".encode("utf-8"))
+        with open(f"_gokrazy/extrafiles/etc/streamdeckpi/{name}.yml", "wb") as f:
+            f.write(yaml_dump(page).encode("utf-8"))
