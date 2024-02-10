@@ -79,6 +79,30 @@ def make_switch(entity_id: str, icon_type: str, pos: list[int]):
     ]
     return action
 
+def make_rca_switcher_input_button(entity_id: str, icon_type: str, index: int, pos: list[int]):
+    return {
+        "button": pos,
+        "name": "homeassistant_entity",
+        "parameters": {
+            "domain": "number",
+            "entity": entity_id,
+            "service_name": "set_value",
+            "service_data": {
+                "value": index,
+            },
+            "icon": f"icons/{icon_type}_off.png",
+            "conditions": [
+                {
+                    "condition": {
+                        "comparison": "==",
+                        "value": index,
+                    },
+                    "icon": f"icons/{icon_type}_on.png",
+                }
+            ],
+        }
+    }
+
 def make_gauge(gaugetype: str, entity_domain: str, entity_id: str, thresholds: list[float], title: str, pos: list[int]):
     return {
         "button": pos,
@@ -265,6 +289,10 @@ def make_default_page():
     actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_1_0um_concentration", [10, 50, 500], "1.0 um", [0, 1]))
     actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_2_5um_concentration", [10, 50, 500], "2.5 um", [0, 2]))
     actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_particulate_matter_10_0um_concentration", [10, 50, 500], "10 um", [0, 3]))
+
+    actions.append(make_rca_switcher_input_button("dori_rca_switcher_input", "network", 1, [7, 0]))
+    actions.append(make_rca_switcher_input_button("dori_rca_switcher_input", "tv", 2, [7, 1]))
+    actions.append(make_rca_switcher_input_button("dori_rca_switcher_input", "computer", 8, [7, 2]))
 
     PAGES["default"] = {"actions":actions}
 
