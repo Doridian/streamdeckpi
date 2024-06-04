@@ -14,7 +14,7 @@ require (
 	github.com/Doridian/karalabe_hid v1.0.0 // indirect
 	github.com/KarpelesLab/hid v0.1.0 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
-	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/net v0.26.0 // indirect
 )
 
 // Well this seems like a weird kludge, but it works to make gokrazy understand to use the local files...
