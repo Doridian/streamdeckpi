@@ -282,7 +282,7 @@ def make_default_page():
     actions.append(make_light_subpage("light.dori_office", "light_group", [1, 2]))
 
     actions.append(make_switch("switch.dori_pc_switch", "desktop", [1, 3]))
-    actions.append(make_switch("switch.dori_desktop_relay", "monitor", [2, 3]))
+    actions.append(make_switch("switch.dori_desktop_switch_2", "monitor", [2, 3]))
     actions.append(make_switch("switch.mister_relay", "game", [3, 3]))
 
     actions.append(make_gauge("lowcolor", "sensor", "sensor.dori_office_co2", [600, 1000, 1500], "CO2", [0, 0]))
