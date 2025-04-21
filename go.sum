@@ -1,7 +1,7 @@
-github.com/Doridian/go-haws v0.4.3 h1:uP87zyOnAcH2sdwueljdERuk89YgVDGz/yzzAGwGdoM=
-github.com/Doridian/go-haws v0.4.3/go.mod h1:UK1GVT0COB5Q+XXxuJ8UTu3BWW21oGNavffut6n9ssw=
-github.com/Doridian/go-streamdeck v1.4.0 h1:17Bv35Ef0hr40bQErAYueqBxApZLHaU/mdoZHfTdPQo=
-github.com/Doridian/go-streamdeck v1.4.0/go.mod h1:wo/0IVytuYVHy3znX4sdh1ctwD45SqWSyg9UMpZKPnA=
+github.com/Doridian/go-haws v1.0.0 h1:F+Dru91n4xMDXl9dLcxUsvbdtxTapgzf6rDtq3KPg5Q=
+github.com/Doridian/go-haws v1.0.0/go.mod h1:KJpyZBD93DPpg1jo8IaA2pvW0rglDbnybeD0qL+34sw=
+github.com/Doridian/go-streamdeck v1.4.1 h1:OZBkC32E6ZJ7fWByw54qq6ONjIIJuDXEQNhkGngU9fQ=
+github.com/Doridian/go-streamdeck v1.4.1/go.mod h1:ScCh9sonhtMaWXpGlctg78pdfefP4fwj3js43YDDY+s=
 github.com/Doridian/karalabe_hid v1.0.0 h1:chRfzxcXZDz/51q2B0UYNrtiPhorFKNz6NTrTuwC2a4=
 github.com/Doridian/karalabe_hid v1.0.0/go.mod h1:Pd7qAbHw7XSMSkc1TkGaV/OjjGqyI8D07uzgDd9LK88=
 github.com/KarpelesLab/hid v0.1.0 h1:TQodVh83+piiiJbuoy8d1w2DFjkI3KS/8Efj0V05ur0=
