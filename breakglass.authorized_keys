@@ -1,7 +1,3 @@
-# This authorized_keys(5) file allows access from keys on capefox
+ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNon6jvJHhJvSdfO1+xdvi9jFcuFCm9q4Dd45Z9ZQPatOGTh9y4bJLpITBk9co+EJeiWOrsD+sktUeizaIqU+9k= doridian@capefox
+ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBN/lwUU7uvM/G/4HdEg4SJ2YaEq2SK8mwMcdPmRZBQ6w4+RykvUAJi3cVLBeI8Ng3vW3faDIW2HU2P4qF4y+kDM= doridian@fennec
 
-# 1Password ed25519
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFIHbTDeNdBFAyl950zQd8s5do5NDZbemH3NP9jat2kY
-
-# Secretive SSH
-ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBF9JMXfVecPace5IOFJ79gQ1VapSOjJXpWVQMJOmHSXk3y3+iuPE8uJ2vtAixpGwqGfOy87J2sw8c0sO9jGfWoY=
