@@ -277,7 +277,7 @@ def make_default_page():
     actions.append(make_light_subpage("light.hue_color_lamp_1_3", "floor_light_top", [1, 0]))
     actions.append(make_light_subpage("light.hue_color_candle_1_2", "floor_light_bottom", [1, 1]))
     actions.append(make_light_subpage("light.hue_lightguide_bulb_1", "ceiling_light", [2, 0]))
-    actions.append(make_light_subpage("light.shapes_ea58", "triangle", [2, 1]))
+    actions.append(make_light_subpage("light.shapes_e21a", "triangle", [2, 1]))
 
     actions.append(make_light_subpage("light.dori_office", "light_group", [1, 2]))
 
