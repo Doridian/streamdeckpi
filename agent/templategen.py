@@ -262,7 +262,7 @@ def make_default_page():
     actions.append(make_switch("switch.mister_relay", "game", [3, 3]))
 
     actions.append(make_gauge("lowcolor", "sensor", "sensor.airgradient_dori_office_co2", [600, 1000, 1500], "CO2", [0, 0]))
-    actions.append(make_gauge("lowcolor", "sensor", "sensor.airgradient_den_particulate_matter_1_0_m_concentration", [10, 50, 500], "1.0 um", [0, 1]))
+    actions.append(make_gauge("lowcolor", "sensor", "sensor.airgradient_dori_office_particulate_matter_1_0_m_concentration", [10, 50, 500], "1.0 um", [0, 1]))
     actions.append(make_gauge("lowcolor", "sensor", "sensor.airgradient_dori_office_particulate_matter_2_5_m_concentration", [10, 50, 500], "2.5 um", [0, 2]))
     actions.append(make_gauge("lowcolor", "sensor", "sensor.airgradient_dori_office_particulate_matter_10_0_m_concentration", [10, 50, 500], "10 um", [0, 3]))
 
