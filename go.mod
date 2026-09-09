@@ -1,6 +1,6 @@
 module github.com/Doridian/streamdeckpi
 
-go 1.25.0
+go 1.26.0
 
 toolchain go1.27.1
 
@@ -8,7 +8,7 @@ require (
 	github.com/Doridian/go-haws v1.0.0
 	github.com/Doridian/go-streamdeck v1.5.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
-	golang.org/x/image v0.45.0
+	golang.org/x/image v0.46.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
