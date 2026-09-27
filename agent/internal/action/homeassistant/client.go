@@ -16,11 +16,23 @@ type haStateReceiver interface {
 	OnState(entityID string, state haws.State) error
 }
 
+type ConnectionState haws.ConnectionState
+
+const (
+	STATE_DISCONNECTED   ConnectionState = ConnectionState(haws.STATE_DISCONNECTED)
+	STATE_CONNECTING     ConnectionState = ConnectionState(haws.STATE_CONNECTING)
+	STATE_AUTHENTICATING ConnectionState = "authenticating"
+	STATE_AUTHENTICATED  ConnectionState = "authenticated"
+	STATE_CONNECTED      ConnectionState = ConnectionState(haws.STATE_CONNECTED)
+)
+
 type haInstance struct {
 	Url   string `yaml:"url"`
 	Token string `yaml:"token"`
 
 	client *haws.Client
+
+	cState ConnectionState
 
 	stateReceiverMap map[string][]haStateReceiver
 	stateLock        *sync.Mutex
@@ -44,6 +56,7 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 			stateReceiverMap: make(map[string][]haStateReceiver),
 			stateLock:        &sync.Mutex{},
 			states:           make(map[string]haws.State),
+			cState:           STATE_DISCONNECTED,
 		}
 
 		path := path.Join("/global/homeassistant", fmt.Sprintf("%s.yml", name))
@@ -57,7 +70,7 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 			return nil, err
 		}
 
-		instance.client = haws.NewClient(instance.Url, instance.Token, instance.onConnect, time.Duration(5)*time.Second)
+		instance.client = haws.NewClient(instance.Url, instance.Token, instance.stateHandler, time.Duration(5)*time.Second)
 
 		err = instance.client.Open()
 		if err != nil {
@@ -66,7 +79,7 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 
 		err = instance.client.AddEventHandler(haws.EventStateChanged, instance)
 		if err != nil {
-			instance.client.Close()
+			_ = instance.client.Close()
 			return nil, err
 		}
 
@@ -76,26 +89,34 @@ func GetHomeAssistant(ctrl controller.Controller, name string) (*haInstance, err
 	return instance, nil
 }
 
-func (i *haInstance) onConnect() {
+func (i *haInstance) stateHandler(state haws.ConnectionState) {
+	if state != haws.STATE_CONNECTED {
+		i.cState = ConnectionState(state)
+		return
+	}
+
+	i.cState = STATE_AUTHENTICATING
 	log.Printf("Websocket connection established")
 
 	err := i.client.WaitAuth()
 	if err != nil {
-		i.client.Close()
+		_ = i.client.Close()
 		log.Printf("onConnect() error WaitAuth(): %v", err)
 		return
 	}
 
 	log.Printf("Websocket connection authenticated")
+	i.cState = STATE_AUTHENTICATED
 
 	err = i.GetStates()
 	if err != nil {
-		i.client.Close()
+		_ = i.client.Close()
 		log.Printf("onConnect() error GetStates(): %v", err)
 		return
 	}
 
 	log.Printf("Websocket connection handshake done")
+	i.cState = STATE_CONNECTED
 }
 
 func (i *haInstance) GetStates() error {
@@ -180,4 +201,8 @@ func (i *haInstance) RegisterStateReceiver(recv haStateReceiver, entityID string
 			NewState: &state,
 		})
 	}
+}
+
+func (i *haInstance) ConnectionState() ConnectionState {
+	return i.cState
 }

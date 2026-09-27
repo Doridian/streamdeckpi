@@ -264,6 +264,21 @@ def make_default_page():
     actions.append(make_gauge("lowcolor", "sensor", "sensor.airgradient_dori_office_particulate_matter_2_5_m_concentration", [10, 50, 500], "2.5 um", [0, 2]))
     actions.append(make_gauge("lowcolor", "sensor", "sensor.airgradient_dori_office_particulate_matter_10_0_m_concentration", [10, 50, 500], "10 um", [0, 3]))
 
+    actions.append({
+        "button": [7, 0],
+        "name": "homeassistant_connectivity",
+        "parameters": {
+            "default_icon": "icons/ha_base.png",
+            "icons": {
+                "disconnected": "icons/ha_disconnected.png",
+                "connecting": "icons/ha_connecting.png",
+                "authenticating": "icons/ha_authenticating.png",
+                "authenticated": "icons/ha_authenticated.png",
+                "connected": "icons/ha_connected.png",
+            },
+        },
+    })
+
     PAGES["default"] = {"actions":actions}
 
 make_default_page()

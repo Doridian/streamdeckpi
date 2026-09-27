@@ -134,7 +134,6 @@ func drawCenteredText(ctrl controller.Controller, img *image.RGBA, font string, 
 	ttCtx.SetDst(img)
 	ttCtx.SetSrc(image.NewUniform(col))
 
-	ttCtx.DrawString(label, pointFont)
-
-	return nil
+	_, err = ttCtx.DrawString(label, pointFont)
+	return err
 }
